@@ -46,6 +46,7 @@ namespace OnlineShop.Api.Mapping
             CreateMap<SaveCustomerDTO, Customer>();
             CreateMap<SaveOrderDTO, Order>();
             CreateMap<SaveOrderHistoryDTO, OrderHistory>();
+            CreateMap<SavePaymentInformationDTO, PaymentInformation>();
         }
     }
 }
