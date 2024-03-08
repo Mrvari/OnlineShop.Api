@@ -12,6 +12,8 @@ namespace OnlineShop.Core.Services
     {
         Task<IEnumerable<OrderHistory>> GetAllOrderHistory();
         Task<OrderHistory> GetOrderHistoryById(int id);
+        Task<OrderHistory> CreateOrderHistory(OrderHistory newOrderHistory);
         Task UpdateOrderHistory(OrderHistory OrderHistoryToBeUpdated, OrderHistory orderHistory);
+        Task DeleteOrderHistory(OrderHistory OrderHistory);
     }
 }
