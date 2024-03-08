@@ -41,6 +41,7 @@ namespace OnlineShop.Api.Mapping
             //Save 
             //SaveProductDTO sınıfını Product sınıfına dönüştüren bir eşleştirme (mapping) oluşturuyor
             CreateMap<SaveProductDTO, Product>();
+            CreateMap<SaveAddressInformationDTO, AddressInformation>();
         }
     }
 }

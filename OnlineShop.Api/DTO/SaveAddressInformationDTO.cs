@@ -1,6 +1,6 @@
 ﻿namespace OnlineShop.Api.DTO
 {
-    public class AddressInformationDTO
+    public class SaveAddressInformationDTO
     {
         public int AddressID { get; set; }
         public string County { get; set; } = "";
