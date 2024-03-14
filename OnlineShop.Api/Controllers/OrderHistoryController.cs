@@ -17,16 +17,29 @@ namespace OnlineShop.Api.Controllers
     {
         private readonly IOrderHistoryService _orderHistoryService;
         private readonly IMapper _mapper;
-        public OrderHistoryController(IOrderHistoryService orderHistoryService)
+        public OrderHistoryController(IOrderHistoryService orderHistoryService, IMapper mapper)
         {
             this._orderHistoryService = orderHistoryService;
+            this._mapper = mapper;
         }
-        [HttpGet]
+
+        [HttpGet("")]
 
         public async Task<ActionResult<IEnumerable<OrderHistory>>> GetAllOrderHistory()
         {
-            var OrderHistories = await _orderHistoryService.GetAllOrderHistory();
-            return Ok(OrderHistories);
+            var orderHistories = await _orderHistoryService.GetAllOrderHistory();
+            var orderHistoryResources = _mapper.Map<IEnumerable<OrderHistory>, IEnumerable<OrderHistoryDTO>>(orderHistories);
+          
+            return Ok(orderHistoryResources);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<OrderHistoryDTO>> GetOrderHistoryById(int id)
+        {
+            var orderHistory = await _orderHistoryService.GetOrderHistoryById(id);
+            var orderHistoryResource = _mapper.Map<OrderHistory, OrderHistoryDTO>(orderHistory);
+
+            return Ok(orderHistoryResource);
         }
 
         [HttpPost]

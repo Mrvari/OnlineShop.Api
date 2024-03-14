@@ -16,27 +16,39 @@ namespace OnlineShop.Api.Controllers
         private readonly ICustomerService _customerService;
         private readonly IMapper _mapper;
 
-        CustomerController(ICustomerService customerService)
+        public CustomerController(ICustomerService customerService, IMapper mapper)
         {
             this._customerService = customerService;
+            this._mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet("")]
 
-        public async Task<ActionResult<IEnumerable<Customer>>> GetAllCustomer()
+        public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetAllCustomer()
         {
             var customers = await _customerService.GetAllCustomer();
-            return Ok(customers);
+            var customerResources = _mapper.Map<IEnumerable<Customer>, IEnumerable<CustomerDTO>>(customers);
+
+            return Ok(customerResources);
         }
 
-        [HttpPost]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CustomerDTO>> GetCustomerById(int id)
+        {
+            var customer = await _customerService.GetCustomerById(id);
+            var customerResource = _mapper.Map<Customer, CustomerDTO>(customer);
+
+            return Ok(customerResource);
+        }
+
+        [HttpPost("")]
         public async Task<ActionResult<CustomerDTO>> CreateCustomer([FromBody] SaveCustomerDTO saveCustomerResource)
         {
             var validator = new SaveCustomerResourceValidatior();
 
             var validationResult = await validator.ValidateAsync(saveCustomerResource);
 
-            if (validationResult.IsValid) 
+            if (!validationResult.IsValid) 
                 return BadRequest(validationResult.Errors);
 
             var customerToCreate = _mapper.Map<SaveCustomerDTO, Customer>(saveCustomerResource);
@@ -67,17 +79,14 @@ namespace OnlineShop.Api.Controllers
             if (customerToBeUpdated == null)
                 return NotFound();
 
-            _mapper.Map(saveCustomerResource, customerToBeUpdated);
+            var customer = _mapper.Map<SaveCustomerDTO, Customer>(saveCustomerResource);
 
-            var updatedCustomerEntity = _mapper.Map<SaveCustomerDTO, Customer>(saveCustomerResource);
-
-            await _customerService.UpdateCustomer(customerToBeUpdated, updatedCustomerEntity);
+            await _customerService.UpdateCustomer(customerToBeUpdated, customer);
 
             var updatedCustomer = await _customerService.GetCustomerById(id);
+            var updatedcustomerResource = _mapper.Map<Customer, CustomerDTO>(updatedCustomer);
 
-            var customerResource = _mapper.Map<Customer, CustomerDTO>(updatedCustomer);
-
-            return Ok(customerResource);
+            return Ok(updatedcustomerResource);
         }
 
         [HttpDelete("{id}")]

@@ -16,24 +16,35 @@ namespace OnlineShop.Api.Controllers
         private readonly IReturnService _returnService;
         private readonly IMapper _mapper;
 
-        public ReturnController(IReturnService returnService)
+        public ReturnController(IReturnService returnService, IMapper mapper)
         {
             this. _returnService = returnService;
+            this._mapper = mapper;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Return>>> GetAllReturn()
+        [HttpGet("")]
+        public async Task<ActionResult<IEnumerable<ReturnDTO>>> GetAllReturn()
         {
             var returns = await _returnService.GetAllReturn();
+            var returnResources = _mapper.Map<IEnumerable<Return>, IEnumerable<ReturnDTO>>(returns);
+
             return Ok(returns);
         }
 
-        [HttpPost]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ReturnDTO>> GetReturnById(int id)
+        {
+            var returns = await _returnService.GetReturnById(id);
+            var returnResources = _mapper.Map<Return, ReturnDTO>(returns);
+
+            return Ok(returnResources);
+        }
+
+        [HttpPost("")]
         public async Task<ActionResult<ReturnDTO>> CreateReturn([FromBody] SaveReturnDTO saveReturnResource)
         {
 
             var validator = new SaveReturnResourceValidator();
-
             var validationResult = await validator.ValidateAsync(saveReturnResource); 
 
             if (validationResult.IsValid) 
@@ -66,17 +77,15 @@ namespace OnlineShop.Api.Controllers
             if (returnToBeUpdated == null)
                 return NotFound();
 
-            _mapper.Map(saveReturnResource, returnToBeUpdated);
+            var returns = _mapper.Map<SaveReturnDTO, Return>(saveReturnResource);
 
-            var updatedReturnEntity = _mapper.Map<SaveReturnDTO, Return>(saveReturnResource);
-
-            await _returnService.UpdateReturn(returnToBeUpdated, updatedReturnEntity);
+            await _returnService.UpdateReturn(returnToBeUpdated, returns);
 
             var updatedReturn = await _returnService.GetReturnById(id);
 
-            var returnResource = _mapper.Map<Return, ReturnDTO>(updatedReturn);
+            var updatedreturnResource = _mapper.Map<Return, ReturnDTO>(updatedReturn);
 
-            return Ok(returnResource);
+            return Ok(updatedreturnResource);
         }
 
         [HttpDelete("{id}")]

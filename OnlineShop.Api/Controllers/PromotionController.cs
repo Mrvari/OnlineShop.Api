@@ -16,19 +16,31 @@ namespace OnlineShop.Api.Controllers
         private readonly IPromotionService _promotionService;
         private readonly IMapper _mapper;
 
-        public PromotionController (IPromotionService promotionService)
+        public PromotionController (IPromotionService promotionService, IMapper mapper)
         {
             this. _promotionService = promotionService;
+            this._mapper = mapper;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Promotion>>> GetAllPromotion()
+        [HttpGet("")]
+        public async Task<ActionResult<IEnumerable<PromotionDTO>>> GetAllPromotion()
         {
-            var products = await _promotionService.GetAllPromotion();
-            return Ok(products);
+            var promotions = await _promotionService.GetAllPromotion();
+            var promotionResources = _mapper.Map<IEnumerable<Promotion>, IEnumerable<PromotionDTO>>(promotions);
+
+            return Ok(promotionResources);
         }
 
-        [HttpPost]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<PromotionDTO>> GetPromotionById(int id)
+        {
+            var promotions = await _promotionService.GetPromotionById(id);
+            var promotionResources = _mapper.Map<Promotion,PromotionDTO>(promotions);
+
+            return Ok(promotionResources);
+        }
+
+        [HttpPost("")]
         public async Task<ActionResult<PromotionDTO>> CreatePromotion([FromBody] SavePromotionDTO savePromotionResource)
         {
             var validator = new SavePromotionResourceValidator();
@@ -41,7 +53,9 @@ namespace OnlineShop.Api.Controllers
 
             var newPromotion = await _promotionService.CreatePromotion(promotionToCreate);
 
-            var promotionResource = _mapper.Map<Promotion, PromotionDTO>(newPromotion); // Corrected mapping type to Promotion
+            var promotion = await _promotionService.GetPromotionById(newPromotion.PromotionID);
+
+            var promotionResource = _mapper.Map<Promotion, PromotionDTO>(promotion); // Corrected mapping type to Promotion
 
             return Ok(promotionResource);
         }
@@ -64,12 +78,11 @@ namespace OnlineShop.Api.Controllers
 
             _mapper.Map(savePromotionResource, promotionToBeUpdated);
 
-            var updatedPromotionEntity = _mapper.Map<SavePromotionDTO, Promotion>(savePromotionResource);
+            var promotion = _mapper.Map<SavePromotionDTO, Promotion>(savePromotionResource);
 
-            await _promotionService.UpdatePromotion(promotionToBeUpdated, updatedPromotionEntity);
+            await _promotionService.UpdatePromotion(promotionToBeUpdated, promotion);
 
             var updatedPromotion = await _promotionService.GetPromotionById(id);
-
             var promotionResource = _mapper.Map<Promotion, PromotionDTO>(updatedPromotion);
 
             return Ok(promotionResource);

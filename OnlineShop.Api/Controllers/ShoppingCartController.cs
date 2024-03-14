@@ -15,27 +15,38 @@ namespace OnlineShop.Api.Controllers
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IMapper _mapper;
 
-        public ShoppingCartController (IShoppingCartService shoppingCartService)
+        public ShoppingCartController (IShoppingCartService shoppingCartService, IMapper mapper)
         {
             this. _shoppingCartService = shoppingCartService;
+            this._mapper = mapper;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ShoppingCart>>> GetAllShoppingCart()
+        [HttpGet("")]
+        public async Task<ActionResult<IEnumerable<ShoppingCartDTO>>> GetAllShoppingCart()
         {
             var shoppingCarts = await _shoppingCartService.GetAllShoppingCart();
+            var shoppingCartResources = _mapper.Map<IEnumerable<ShoppingCart>, IEnumerable<ShoppingCartDTO>>(shoppingCarts);
+
             return Ok(shoppingCarts);
         }
 
-        [HttpPost]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ShoppingCartDTO>> GetShoppingCartById(int id)
+        {
+            var shoppingCart = await _shoppingCartService.GetShoppingCartById(id);
+            var shoppingCartResource = _mapper.Map<ShoppingCart, ShoppingCartDTO>(shoppingCart);
+
+            return Ok(shoppingCartResource);
+        }
+
+        [HttpPost("")]
         public async Task<ActionResult<ShoppingCartDTO>> CreateShoppingCart([FromBody] SaveShoppingCartDTO saveShoppingCartResource)
         {
 
             var validator = new SaveShoppingCartResourceValidator();
-
             var validationResult = await validator.ValidateAsync(saveShoppingCartResource);
 
-            if (validationResult.IsValid)
+            if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
             var shoppingCartToCreate = _mapper.Map<SaveShoppingCartDTO, ShoppingCart>(saveShoppingCartResource);
@@ -65,17 +76,14 @@ namespace OnlineShop.Api.Controllers
             if (shoppingCartToBeUpdated == null)
                 return NotFound();
 
-            _mapper.Map(saveShoppingCartResource, shoppingCartToBeUpdated);
+            var shoppingCart = _mapper.Map<SaveShoppingCartDTO, ShoppingCart>(saveShoppingCartResource);
 
-            var updatedShoppingCartEntity = _mapper.Map<SaveShoppingCartDTO, ShoppingCart>(saveShoppingCartResource);
-
-            await _shoppingCartService.UpdateShoppingCart(shoppingCartToBeUpdated, updatedShoppingCartEntity);
+            await _shoppingCartService.UpdateShoppingCart(shoppingCartToBeUpdated, shoppingCart);
 
             var updatedShoppingCart = await _shoppingCartService.GetShoppingCartById(id);
+            var updatedshoppingCartResource = _mapper.Map<ShoppingCart, ShoppingCartDTO>(updatedShoppingCart);
 
-            var shoppingCartResource = _mapper.Map<ShoppingCart, ShoppingCartDTO>(updatedShoppingCart);
-
-            return Ok(shoppingCartResource);
+            return Ok(updatedshoppingCartResource);
         }
 
         [HttpDelete("{id}")]

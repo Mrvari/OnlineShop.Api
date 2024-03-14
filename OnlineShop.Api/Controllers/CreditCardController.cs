@@ -15,26 +15,38 @@ namespace OnlineShop.Api.Controllers
     {
         private readonly ICreditCardService _creditCardService;
         private readonly IMapper _mapper;
-        public CreditCardController(ICreditCardService creditCardService)
+        public CreditCardController(ICreditCardService creditCardService, IMapper mapper)
         {
             this._creditCardService = creditCardService;
+            this._mapper = mapper;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<CreditCard>>> GetAllCreditCard()
+        [HttpGet("")]
+        public async Task<ActionResult<IEnumerable<CreditCardDTO>>> GetAllCreditCard()
         {
             var creditCards = await _creditCardService.GetAllCreditCard();
-            return Ok(creditCards);
+            var creditCardResources = _mapper.Map<IEnumerable<CreditCard>, IEnumerable<CreditCardDTO>>(creditCards);
+
+            return Ok(creditCardResources);
         }
 
-        [HttpPost]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CreditCardDTO>> GetCreditCardById(int id)
+        {
+            var creditCards = await _creditCardService.GetCreditCardById(id);
+            var creditCardResources = _mapper.Map<CreditCard, CreditCardDTO>(creditCards);
+
+            return Ok(creditCardResources);
+        }
+
+        [HttpPost("")]
         public async Task<ActionResult<CreditCardDTO>> CreateCreditCard([FromBody] SaveCreditCardDTO saveCreditCardResource)
         {
             var validator = new SaveCreditCardResourceValidator();
 
             var validationResult = await validator.ValidateAsync(saveCreditCardResource);
 
-            if (validationResult.IsValid) //doğrulama sonucunu kotnrol eder
+            if (!validationResult.IsValid) //doğrulama sonucunu kotnrol eder
                 return BadRequest(validationResult.Errors);
 
             var creditCardToCreate = _mapper.Map<SaveCreditCardDTO, CreditCard>(saveCreditCardResource);
@@ -65,14 +77,11 @@ namespace OnlineShop.Api.Controllers
             if (creditCardToBeUpdate == null)
                 return NotFound();
 
-            _mapper.Map(saveCreditCardResource, creditCardToBeUpdate);
+            var creditCard = _mapper.Map<SaveCreditCardDTO, CreditCard>(saveCreditCardResource);
 
-            var updatedCreditCardEntity = _mapper.Map<SaveCreditCardDTO, CreditCard>(saveCreditCardResource);
-
-            await _creditCardService.UpdateCreditCard(creditCardToBeUpdate, updatedCreditCardEntity);
+            await _creditCardService.UpdateCreditCard(creditCardToBeUpdate, creditCard);
 
             var updatedCreditCard = await _creditCardService.GetCreditCardById(id);
-
             var creditCardResource = _mapper.Map<CreditCard, CreditCardDTO>(updatedCreditCard);
 
             return Ok(creditCardResource);

@@ -15,26 +15,37 @@ namespace OnlineShop.Api.Controllers
         private readonly IStockService _stockService;
         private readonly IMapper _mapper;
 
-        public StockController(IStockService stockService)
+        public StockController(IStockService stockService, IMapper mapper)
         {
             this._stockService = stockService;
+            this._mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet("")]
         public async Task<ActionResult<IEnumerable<Stock>>> GetAllStock()
         {
             var stocks = await _stockService.GetAllStock();
-            return Ok(stocks);
+            var stockResources = _mapper.Map<IEnumerable<Stock>, IEnumerable<StockDTO>>(stocks);
+
+            return Ok(stockResources);
         }
 
-        [HttpPost]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<StockDTO>> GetStockById(int id)
+        {
+            var stocks = await _stockService.GetStockById(id);
+            var stockResources = _mapper.Map<Stock , StockDTO>(stocks);
+
+            return Ok(stockResources);
+        }
+
+        [HttpPost("")]
         public async Task<ActionResult<StockDTO>> CreateStock([FromBody] SaveStockDTO saveStockResource)
         {
             var validator = new SaveStockResourceValidatior();
-
             var validationResult = await validator.ValidateAsync(saveStockResource);
 
-            if (validationResult.IsValid)
+            if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
             var stockToCreate = _mapper.Map<SaveStockDTO, Stock>(saveStockResource);
@@ -64,14 +75,11 @@ namespace OnlineShop.Api.Controllers
             if (stockToBeUpdated == null)
                 return NotFound();
 
-            _mapper.Map(saveStockResource, stockToBeUpdated);
+            var stock = _mapper.Map<SaveStockDTO, Stock>(saveStockResource);
 
-            var updatedStockEntity = _mapper.Map<SaveStockDTO, Stock>(saveStockResource);
-
-            await _stockService.UpdateStock(stockToBeUpdated, updatedStockEntity);
+            await _stockService.UpdateStock(stockToBeUpdated, stock);
 
             var updatedStock = await _stockService.GetStockById(id);
-
             var stockResource = _mapper.Map<Stock, StockDTO>(updatedStock);
 
             return Ok(stockResource);

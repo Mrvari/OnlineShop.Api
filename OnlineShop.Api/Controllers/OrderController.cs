@@ -14,9 +14,10 @@ namespace OnlineShop.Api.Controllers
         private readonly IOrderService _orderService;
         private readonly IMapper _mapper;
 
-        public OrderController(IOrderService orderService)
+        public OrderController(IOrderService orderService, IMapper mapper)
         {
             this._orderService = orderService;
+            this._mapper = mapper;
         }
 
         [HttpGet]
@@ -27,14 +28,23 @@ namespace OnlineShop.Api.Controllers
             return Ok(orders);
         }
 
-        [HttpPost]
+        [HttpGet("{id}")]
+
+        public async Task<ActionResult<Order>> GetOrderById(int id)
+        {
+            var order = await _orderService.GetOrderById(id);
+            var orderResource = _mapper.Map<Order, OrderDTO>(order);
+
+            return Ok(orderResource);
+        }
+
+        [HttpPost("")]
         public async Task<ActionResult<OrderDTO>> CreateOrder([FromBody] SaveOrderDTO saveOrderResource)
         {
             var validator = new SaveOrderResourceValidator();
-
             var validationResult = await validator.ValidateAsync(saveOrderResource);
 
-            if (validationResult.IsValid) 
+            if (!validationResult.IsValid) 
                 return BadRequest(validationResult.Errors);
 
             var orderToCreate = _mapper.Map<SaveOrderDTO, Order>(saveOrderResource);
@@ -65,17 +75,14 @@ namespace OnlineShop.Api.Controllers
             if (orderToBeUpdated == null)
                 return NotFound();
 
-            _mapper.Map(saveOrderResource, orderToBeUpdated);
+            var order = _mapper.Map<SaveOrderDTO, Order>(saveOrderResource);
 
-            var updatedOrderEntity = _mapper.Map<SaveOrderDTO, Order>(saveOrderResource);
-
-            await _orderService.UpdateOrder(orderToBeUpdated, updatedOrderEntity);
+            await _orderService.UpdateOrder(orderToBeUpdated, order);
 
             var updatedOrder = await _orderService.GetOrderById(id);
+            var updatedorderResource = _mapper.Map<Order, OrderDTO>(updatedOrder);
 
-            var orderResource = _mapper.Map<Order, OrderDTO>(updatedOrder);
-
-            return Ok(orderResource);
+            return Ok(updatedorderResource);
         }
 
         [HttpDelete("{id}")]

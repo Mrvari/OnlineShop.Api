@@ -14,18 +14,14 @@ namespace OnlineShop.Api.Controllers
         private readonly IProductService _productService;
         private readonly IMapper _mapper;
 
-        //productları databaseden çekip return edebilmek için ProductService'i controllerın içine eklememiz gerekiyor.
-        //Bunu da constructor ile yapıyoruz
         public ProductController(IProductService productService, IMapper mapper)
         {
             this. _productService = productService;
             this._mapper = mapper;
         }
 
-
-        //endpoint : İnternet ve ağ bağlamında endpoint, bir ağdaki iletişimin sonlandığı veya başladığı noktadır.
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetAllProduct()
+        [HttpGet("")]
+        public async Task<ActionResult<IEnumerable<ProductDTO>>> GetAllProduct()
         {
             var products = await _productService.GetAllProduct();
             var productResources = _mapper.Map<IEnumerable<Product>, IEnumerable<ProductDTO>>(products);
@@ -33,7 +29,16 @@ namespace OnlineShop.Api.Controllers
             return Ok(productResources);
         }
 
-        [HttpPost]
+        [HttpGet("id")]
+        public async Task<ActionResult<ProductDTO>> GetProductById(int id)
+        {
+            var products = await _productService.GetProductById(id);
+            var productResources = _mapper.Map<Product, ProductDTO>(products);
+
+            return Ok(productResources);
+        }
+
+        [HttpPost("")]
         public async Task<ActionResult<ProductDTO>> CreateProduct([FromBody] SaveProductDTO saveProductResource)
         {
 
@@ -41,7 +46,7 @@ namespace OnlineShop.Api.Controllers
 
             var validationResult = await validator.ValidateAsync(saveProductResource); //Bu satır, gelen müzik kaydı verilerinin doğruluğunu kontrol eder
 
-            if (validationResult.IsValid) //doğrulama sonucunu kotnrol eder
+            if (!validationResult.IsValid) //doğrulama sonucunu kotnrol eder
                 return BadRequest(validationResult.Errors); 
 
             var productToCreate = _mapper.Map<SaveProductDTO, Product>(saveProductResource); //SaveProductDTO nesnesini product nesnesine dönüştürür
@@ -59,7 +64,6 @@ namespace OnlineShop.Api.Controllers
         public async Task<ActionResult<ProductDTO>> UpdateProduct(int id, [FromBody] SaveProductDTO saveProductResource)
         {
             var validator = new SaveProductResourceValidator();
-
             var validationResult = await validator.ValidateAsync(saveProductResource);
 
             var requestIsInvalid = id == 0 || !validationResult.IsValid;
@@ -72,17 +76,14 @@ namespace OnlineShop.Api.Controllers
             if (productToBeUpdated == null)
                 return NotFound();
 
-            _mapper.Map(saveProductResource, productToBeUpdated);
+            var product = _mapper.Map<SaveProductDTO, Product>(saveProductResource);
 
-            var updatedProductEntity = _mapper.Map<SaveProductDTO, Product>(saveProductResource);
-
-            await _productService.UpdateProduct(productToBeUpdated, updatedProductEntity);
+            await _productService.UpdateProduct(productToBeUpdated, product);
 
             var updatedProduct = await _productService.GetProductById(id);
+            var updatedproductResource = _mapper.Map<Product, ProductDTO>(updatedProduct);
 
-            var productResource = _mapper.Map<Product, ProductDTO>(updatedProduct);
-
-            return Ok(productResource);
+            return Ok(updatedproductResource);
         }
 
         [HttpDelete("{id}")]
