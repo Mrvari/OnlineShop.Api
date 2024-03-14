@@ -1,16 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using OnlineShop.Core.Models.CustomerManagement;
 using OnlineShop.Core.Services;
-using OnlineShop.Services.Services;
 using OnlineShop.Api.DTO;
 using OnlineShop.Api.Validators;
 
 namespace OnlineShop.Api.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("[controller]")]
     public class AddressInformationController : ControllerBase
     {
         private readonly IAddressInformationService _addressInformationService;
@@ -22,7 +20,7 @@ namespace OnlineShop.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AddressInformation>>> GetAllAddressInformation()
+        public async Task<ActionResult<IEnumerable<AddressInformationDTO>>> GetAllAddressInformation()
         {
             var addressInformations = await _addressInformationService.GetAllAddressInformation();
 
@@ -30,14 +28,23 @@ namespace OnlineShop.Api.Controllers
             return Ok(addressInformationResources);
         }
 
-        [HttpPost]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<AddressInformationDTO>> GetAddressInformationById (int id)
+        {
+            var addressInformation = await _addressInformationService.GetAddressInformationById(id);
+            var addressInformationResource = _mapper.Map<AddressInformation, AddressInformationDTO>(addressInformation);
+
+            return Ok(addressInformationResource);
+        }
+
+        [HttpPost("")]
         public async Task<ActionResult<AddressInformationDTO>> CreateAddress([FromBody] SaveAddressInformationDTO saveAddressInformationResource)
         {
             var validator = new SaveAddressInformationResourceValidator();
 
             var validationResult = await validator.ValidateAsync(saveAddressInformationResource);
 
-            if (validationResult.IsValid) //doğrulama sonucunu kotnrol eder
+            if (!validationResult.IsValid) //doğrulama sonucunu kotnrol eder
                 return BadRequest(validationResult.Errors);
 
             var addressToCreate = _mapper.Map<SaveAddressInformationDTO, AddressInformation>(saveAddressInformationResource);
@@ -57,7 +64,9 @@ namespace OnlineShop.Api.Controllers
             var validator = new SaveAddressInformationResourceValidator();
             var validationResult = await validator.ValidateAsync(saveAddressInformationResource);
 
-            if (!validationResult.IsValid)
+            var requestIsInvalid = id == 0 || !validationResult.IsValid;
+
+            if (requestIsInvalid)
                 return BadRequest(validationResult.Errors);
 
             var addressToUpdate = await _addressInformationService.GetAddressInformationById(id);
@@ -65,17 +74,30 @@ namespace OnlineShop.Api.Controllers
             if (addressToUpdate == null)
                 return NotFound();
 
-            _mapper.Map(saveAddressInformationResource, addressToUpdate);
+            var addressInformation = _mapper.Map<SaveAddressInformationDTO, AddressInformation>(saveAddressInformationResource);
 
-            var updatedAddress = _mapper.Map<SaveAddressInformationDTO, AddressInformation>(saveAddressInformationResource);
-            
-            await _addressInformationService.UpdateAddress(addressToUpdate, updatedAddress);
+            await _addressInformationService.UpdateAddress(addressToUpdate, addressInformation);
 
             var updatedAddressInformation = await _addressInformationService.GetAddressInformationById(id);
+            var updatedAddressInformationResource = _mapper.Map<AddressInformation, AddressInformationDTO> (updatedAddressInformation);
 
-            var addressResource = _mapper.Map<AddressInformation, AddressInformationDTO>(updatedAddressInformation);
+            return Ok(updatedAddressInformationResource);
+        }
 
-            return Ok(addressResource);
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAddress(int id)
+        {
+            if (id == 0)
+                return BadRequest();
+
+            var addressInformation = await _addressInformationService.GetAddressInformationById(id);
+
+            if (addressInformation == null)
+                return NotFound();
+
+            await _addressInformationService.DeleteAddress(addressInformation);
+
+            return NoContent();
         }
     }
 }

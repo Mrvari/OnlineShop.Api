@@ -77,5 +77,22 @@ namespace OnlineShop.Api.Controllers
 
             return Ok(creditCardResource);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCreditCard(int id)
+        {
+            if (id == 0)
+                return BadRequest("Invalid CreditCardID parameter.");
+
+            var creditCard = await _creditCardService.GetCreditCardById(id);
+
+            if (creditCard == null)
+                return NotFound();
+
+            await _creditCardService.DeleteCreditCard(creditCard);
+
+            return NoContent();
+        }
+
     }
 }

@@ -79,5 +79,21 @@ namespace OnlineShop.Api.Controllers
             return Ok(returnResource);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteReturn(int id)
+        {
+            if (id == 0)
+                return BadRequest("Invalid return ID.");
+
+            var returnObject = await _returnService.GetReturnById(id);
+
+            if (returnObject == null)
+                return NotFound();
+
+            await _returnService.DeleteReturn(returnObject);
+
+            return NoContent();
+        }
+
     }
 }

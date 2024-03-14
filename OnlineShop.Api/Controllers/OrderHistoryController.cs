@@ -78,5 +78,21 @@ namespace OnlineShop.Api.Controllers
             return Ok(orderHistoryResource);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOrderHistory(int id)
+        {
+            if (id == 0)
+                return BadRequest("Invalid order history ID.");
+
+            var orderHistory = await _orderHistoryService.GetOrderHistoryById(id);
+
+            if (orderHistory == null)
+                return NotFound();
+
+            await _orderHistoryService.DeleteOrderHistory(orderHistory);
+
+            return NoContent();
+        }
+
     }
 }

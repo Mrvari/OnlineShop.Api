@@ -75,5 +75,21 @@ namespace OnlineShop.Api.Controllers
             return Ok(promotionResource);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePromotion(int id)
+        {
+            if (id == 0)
+                return BadRequest("Invalid promotion ID.");
+
+            var promotion = await _promotionService.GetPromotionById(id);
+
+            if (promotion == null)
+                return NotFound();
+
+            await _promotionService.DeletePromotion(promotion);
+
+            return NoContent();
+        }
+
     }
 }

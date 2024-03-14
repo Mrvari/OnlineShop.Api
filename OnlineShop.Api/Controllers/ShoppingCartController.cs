@@ -78,5 +78,20 @@ namespace OnlineShop.Api.Controllers
             return Ok(shoppingCartResource);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteShoppingCart(int id)
+        {
+            if (id == 0)
+                return BadRequest("Invalid shopping cart ID.");
+
+            var shoppingCart = await _shoppingCartService.GetShoppingCartById(id);
+
+            if (shoppingCart == null)
+                return NotFound();
+
+            await _shoppingCartService.DeleteShoppingCart(shoppingCart);
+
+            return NoContent();
+        }
     }
 }

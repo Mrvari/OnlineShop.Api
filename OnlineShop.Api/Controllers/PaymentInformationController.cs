@@ -77,5 +77,21 @@ namespace OnlineShop.Api.Controllers
 
             return Ok(paymentInformationResource);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePayment(int id)
+        {
+            if (id == 0)
+                return BadRequest("Invalid payment information ID.");
+
+            var paymentInformation = await _paymentInformationService.GetPaymentInformationById(id);
+
+            if (paymentInformation == null)
+                return NotFound();
+
+            await _paymentInformationService.DeletePaymentInformation(paymentInformation);
+
+            return NoContent();
+        }
     }
 }

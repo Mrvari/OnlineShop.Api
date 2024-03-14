@@ -79,5 +79,21 @@ namespace OnlineShop.Api.Controllers
 
             return Ok(customerResource);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCustomer(int id)
+        {
+            if (id == 0)
+                return BadRequest("Invalid customer ID.");
+
+            var customer = await _customerService.GetCustomerById(id);
+
+            if (customer == null)
+                return NotFound();
+
+            await _customerService.DeleteCustomer(customer);
+
+            return NoContent();
+        }
     }
 }

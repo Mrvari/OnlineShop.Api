@@ -85,5 +85,21 @@ namespace OnlineShop.Api.Controllers
             return Ok(productResource);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            if (id == 0)
+                return BadRequest("Invalid product ID.");
+
+            var product = await _productService.GetProductById(id);
+
+            if (product == null)
+                return NotFound();
+
+            await _productService.DeleteProduct(product);
+
+            return NoContent();
+        }
+
     }
 }

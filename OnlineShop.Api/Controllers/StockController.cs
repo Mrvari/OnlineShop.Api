@@ -77,5 +77,20 @@ namespace OnlineShop.Api.Controllers
             return Ok(stockResource);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteStock(int id)
+        {
+            if (id == 0)
+                return BadRequest("Invalid stock ID.");
+
+            var stockObject = await _stockService.GetStockById(id);
+
+            if (stockObject == null)
+                return NotFound();
+
+            await _stockService.DeleteStock(stockObject);
+
+            return NoContent();
+        }
     }
 }
