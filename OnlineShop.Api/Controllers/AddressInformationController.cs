@@ -50,5 +50,32 @@ namespace OnlineShop.Api.Controllers
 
             return Ok(addressResource);
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<AddressInformationDTO>> UpdateAddress(int id, [FromBody] SaveAddressInformationDTO saveAddressInformationResource)
+        {
+            var validator = new SaveAddressInformationResourceValidator();
+            var validationResult = await validator.ValidateAsync(saveAddressInformationResource);
+
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            var addressToUpdate = await _addressInformationService.GetAddressInformationById(id);
+
+            if (addressToUpdate == null)
+                return NotFound();
+
+            _mapper.Map(saveAddressInformationResource, addressToUpdate);
+
+            var updatedAddress = _mapper.Map<SaveAddressInformationDTO, AddressInformation>(saveAddressInformationResource);
+            
+            await _addressInformationService.UpdateAddress(addressToUpdate, updatedAddress);
+
+            var updatedAddressInformation = await _addressInformationService.GetAddressInformationById(id);
+
+            var addressResource = _mapper.Map<AddressInformation, AddressInformationDTO>(updatedAddressInformation);
+
+            return Ok(addressResource);
+        }
     }
 }

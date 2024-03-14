@@ -18,6 +18,6 @@ namespace OnlineShop.Core.Services
         Task<AddressInformation> GetAddressInformationById(int id);
         Task<AddressInformation> CreateAddress(AddressInformation newAddress);
         Task UpdateAddress(AddressInformation AddressToBeUpdated, AddressInformation Address);
-        Task DeleteAddress(AddressInformation Address);
+        Task DeleteAddress(AddressInformation updatedAddress);
     }
 }
