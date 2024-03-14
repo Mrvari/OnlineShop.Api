@@ -3,9 +3,9 @@ using OnlineShop.Api.DTO;
 
 namespace OnlineShop.Api.Validators
 {
-    public class SaveStockResourceValidation: AbstractValidator<SaveStockDTO>
+    public class SaveStockResourceValidatior: AbstractValidator<SaveStockDTO>
     {
-        public SaveStockResourceValidation() 
+        public SaveStockResourceValidatior() 
         {
             RuleFor(p => p.StockID)
                 .NotEmpty();

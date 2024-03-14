@@ -48,5 +48,35 @@ namespace OnlineShop.Api.Controllers
 
             return Ok(shoppingCartResource);
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ShoppingCartDTO>> UpdateShoppingCart(int id, [FromBody] SaveShoppingCartDTO saveShoppingCartResource)
+        {
+            var validator = new SaveShoppingCartResourceValidator();
+            var validationResult = await validator.ValidateAsync(saveShoppingCartResource);
+
+            var requestIsInvalid = id == 0 || !validationResult.IsValid;
+
+            if (requestIsInvalid)
+                return BadRequest(validationResult.Errors);
+
+            var shoppingCartToBeUpdated = await _shoppingCartService.GetShoppingCartById(id);
+
+            if (shoppingCartToBeUpdated == null)
+                return NotFound();
+
+            _mapper.Map(saveShoppingCartResource, shoppingCartToBeUpdated);
+
+            var updatedShoppingCartEntity = _mapper.Map<SaveShoppingCartDTO, ShoppingCart>(saveShoppingCartResource);
+
+            await _shoppingCartService.UpdateShoppingCart(shoppingCartToBeUpdated, updatedShoppingCartEntity);
+
+            var updatedShoppingCart = await _shoppingCartService.GetShoppingCartById(id);
+
+            var shoppingCartResource = _mapper.Map<ShoppingCart, ShoppingCartDTO>(updatedShoppingCart);
+
+            return Ok(shoppingCartResource);
+        }
+
     }
 }

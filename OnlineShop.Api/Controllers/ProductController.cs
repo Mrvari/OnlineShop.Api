@@ -54,5 +54,36 @@ namespace OnlineShop.Api.Controllers
 
             return Ok(productResource);
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ProductDTO>> UpdateProduct(int id, [FromBody] SaveProductDTO saveProductResource)
+        {
+            var validator = new SaveProductResourceValidator();
+
+            var validationResult = await validator.ValidateAsync(saveProductResource);
+
+            var requestIsInvalid = id == 0 || !validationResult.IsValid;
+
+            if (requestIsInvalid)
+                return BadRequest(validationResult.Errors);
+
+            var productToBeUpdated = await _productService.GetProductById(id);
+
+            if (productToBeUpdated == null)
+                return NotFound();
+
+            _mapper.Map(saveProductResource, productToBeUpdated);
+
+            var updatedProductEntity = _mapper.Map<SaveProductDTO, Product>(saveProductResource);
+
+            await _productService.UpdateProduct(productToBeUpdated, updatedProductEntity);
+
+            var updatedProduct = await _productService.GetProductById(id);
+
+            var productResource = _mapper.Map<Product, ProductDTO>(updatedProduct);
+
+            return Ok(productResource);
+        }
+
     }
 }

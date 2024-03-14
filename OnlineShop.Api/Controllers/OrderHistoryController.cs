@@ -47,5 +47,36 @@ namespace OnlineShop.Api.Controllers
 
             return Ok(orderHistoryResource);
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<OrderHistoryDTO>> UpdateOrderHistory(int id, [FromBody] SaveOrderHistoryDTO saveOrderHistoryResource)
+        {
+            var validator = new SaveOrderHistoryResourceValidator();
+
+            //var validationResult = await validator.ValidateAsync(saveOrderHistoryResource);
+
+            //var requestIsInvalid = id == 0 || !validationResult.IsValid;
+
+           // if (requestIsInvalid)
+                //return BadRequest(validationResult.Errors);
+
+            var orderHistoryToBeUpdated = await _orderHistoryService.GetOrderHistoryById(id);
+
+            if (orderHistoryToBeUpdated == null)
+                return NotFound();
+
+            _mapper.Map(saveOrderHistoryResource, orderHistoryToBeUpdated);
+
+            var updatedOrderHistoryEntity = _mapper.Map<SaveOrderHistoryDTO, OrderHistory>(saveOrderHistoryResource);
+
+            await _orderHistoryService.UpdateOrderHistory(orderHistoryToBeUpdated, updatedOrderHistoryEntity);
+
+            var updatedOrderHistory = await _orderHistoryService.GetOrderHistoryById(id);
+
+            var orderHistoryResource = _mapper.Map<OrderHistory, OrderHistoryDTO>(updatedOrderHistory);
+
+            return Ok(orderHistoryResource);
+        }
+
     }
 }

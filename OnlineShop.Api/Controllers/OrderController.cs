@@ -47,5 +47,36 @@ namespace OnlineShop.Api.Controllers
 
             return Ok(orderResoruce);
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<OrderDTO>> UpdateOrder(int id, [FromBody] SaveOrderDTO saveOrderResource)
+        {
+            var validator = new SaveOrderResourceValidator();
+
+            var validationResult = await validator.ValidateAsync(saveOrderResource);
+
+            var requestIsInvalid = id == 0 || !validationResult.IsValid;
+
+            if (requestIsInvalid)
+                return BadRequest(validationResult.Errors);
+
+            var orderToBeUpdated = await _orderService.GetOrderById(id);
+
+            if (orderToBeUpdated == null)
+                return NotFound();
+
+            _mapper.Map(saveOrderResource, orderToBeUpdated);
+
+            var updatedOrderEntity = _mapper.Map<SaveOrderDTO, Order>(saveOrderResource);
+
+            await _orderService.UpdateOrder(orderToBeUpdated, updatedOrderEntity);
+
+            var updatedOrder = await _orderService.GetOrderById(id);
+
+            var orderResource = _mapper.Map<Order, OrderDTO>(updatedOrder);
+
+            return Ok(orderResource);
+        }
+
     }
 }

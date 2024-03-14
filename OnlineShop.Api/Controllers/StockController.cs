@@ -30,7 +30,7 @@ namespace OnlineShop.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<StockDTO>> CreateStock([FromBody] SaveStockDTO saveStockResource)
         {
-            var validator = new SaveStockResourceValidation();
+            var validator = new SaveStockResourceValidatior();
 
             var validationResult = await validator.ValidateAsync(saveStockResource);
 
@@ -47,5 +47,35 @@ namespace OnlineShop.Api.Controllers
 
             return Ok(stockResource);
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<StockDTO>> UpdateStock(int id, [FromBody] SaveStockDTO saveStockResource)
+        {
+            var validator = new SaveStockResourceValidatior();
+            var validationResult = await validator.ValidateAsync(saveStockResource);
+
+            var requestIsInvalid = id == 0 || !validationResult.IsValid;
+
+            if (requestIsInvalid)
+                return BadRequest(validationResult.Errors);
+
+            var stockToBeUpdated = await _stockService.GetStockById(id);
+
+            if (stockToBeUpdated == null)
+                return NotFound();
+
+            _mapper.Map(saveStockResource, stockToBeUpdated);
+
+            var updatedStockEntity = _mapper.Map<SaveStockDTO, Stock>(saveStockResource);
+
+            await _stockService.UpdateStock(stockToBeUpdated, updatedStockEntity);
+
+            var updatedStock = await _stockService.GetStockById(id);
+
+            var stockResource = _mapper.Map<Stock, StockDTO>(updatedStock);
+
+            return Ok(stockResource);
+        }
+
     }
 }

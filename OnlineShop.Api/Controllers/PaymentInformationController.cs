@@ -47,5 +47,35 @@ namespace OnlineShop.Api.Controllers
 
             return Ok(newPaymentInformation);
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<PaymentInformationDTO>> UpdatePayment(int id, [FromBody] SavePaymentInformationDTO savePaymentInformationResource)
+        {
+            var validator = new SavePaymentInformationResourceValidator();
+
+            var validationResult = await validator.ValidateAsync(savePaymentInformationResource);
+
+            var requestIsInvalid = id == 0 || !validationResult.IsValid;
+
+            if (requestIsInvalid)
+                return BadRequest(validationResult.Errors);
+
+            var paymentInformationToBeUpdated = await _paymentInformationService.GetPaymentInformationById(id);
+
+            if (paymentInformationToBeUpdated == null)
+                return NotFound();
+
+            _mapper.Map(savePaymentInformationResource, paymentInformationToBeUpdated);
+
+            var updatedPaymentInformationEntity = _mapper.Map<SavePaymentInformationDTO, PaymentInformation>(savePaymentInformationResource);
+
+            await _paymentInformationService.UpdatePaymentInformation(paymentInformationToBeUpdated, updatedPaymentInformationEntity);
+
+            var updatedPaymentInformation = await _paymentInformationService.GetPaymentInformationById(id);
+
+            var paymentInformationResource = _mapper.Map<PaymentInformation, PaymentInformationDTO>(updatedPaymentInformation);
+
+            return Ok(paymentInformationResource);
+        }
     }
 }

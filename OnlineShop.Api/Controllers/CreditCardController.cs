@@ -5,6 +5,7 @@ using OnlineShop.Api.DTO;
 using OnlineShop.Api.Validators;
 using OnlineShop.Core.Models.CustomerManagement;
 using OnlineShop.Core.Services;
+using OnlineShop.Services.Services;
 
 namespace OnlineShop.Api.Controllers
 {
@@ -43,6 +44,36 @@ namespace OnlineShop.Api.Controllers
             var creditCard = await _creditCardService.GetCreditCardById(newCreditCard.CardID);
 
             var creditCardResource = _mapper.Map<CreditCard, CreditCardDTO>(creditCard);
+
+            return Ok(creditCardResource);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<CreditCardDTO>> UpdateCreditCard(int id, [FromBody] SaveCreditCardDTO saveCreditCardResource)
+        {
+            var validator = new SaveCreditCardResourceValidator();
+
+            var validationResult = await validator.ValidateAsync(saveCreditCardResource);
+
+            var requestIsInvalid = id == 0 || !validationResult.IsValid;
+
+            if (requestIsInvalid)
+                return BadRequest(validationResult.Errors); // this needs refining, but for demo it is ok
+
+            var creditCardToBeUpdate = await _creditCardService.GetCreditCardById(id);
+
+            if (creditCardToBeUpdate == null)
+                return NotFound();
+
+            _mapper.Map(saveCreditCardResource, creditCardToBeUpdate);
+
+            var updatedCreditCardEntity = _mapper.Map<SaveCreditCardDTO, CreditCard>(saveCreditCardResource);
+
+            await _creditCardService.UpdateCreditCard(creditCardToBeUpdate, updatedCreditCardEntity);
+
+            var updatedCreditCard = await _creditCardService.GetCreditCardById(id);
+
+            var creditCardResource = _mapper.Map<CreditCard, CreditCardDTO>(updatedCreditCard);
 
             return Ok(creditCardResource);
         }

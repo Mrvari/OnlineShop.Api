@@ -49,5 +49,35 @@ namespace OnlineShop.Api.Controllers
 
             return Ok(returnResource);
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ReturnDTO>> UpdateReturn(int id, [FromBody] SaveReturnDTO saveReturnResource)
+        {
+            var validator = new SaveReturnResourceValidator();
+            var validationResult = await validator.ValidateAsync(saveReturnResource);
+
+            var requestIsInvalid = id == 0 || !validationResult.IsValid;
+
+            if (requestIsInvalid)
+                return BadRequest(validationResult.Errors);
+
+            var returnToBeUpdated = await _returnService.GetReturnById(id);
+
+            if (returnToBeUpdated == null)
+                return NotFound();
+
+            _mapper.Map(saveReturnResource, returnToBeUpdated);
+
+            var updatedReturnEntity = _mapper.Map<SaveReturnDTO, Return>(saveReturnResource);
+
+            await _returnService.UpdateReturn(returnToBeUpdated, updatedReturnEntity);
+
+            var updatedReturn = await _returnService.GetReturnById(id);
+
+            var returnResource = _mapper.Map<Return, ReturnDTO>(updatedReturn);
+
+            return Ok(returnResource);
+        }
+
     }
 }

@@ -45,5 +45,35 @@ namespace OnlineShop.Api.Controllers
 
             return Ok(promotionResource);
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<PromotionDTO>> UpdatePromotion(int id, [FromBody] SavePromotionDTO savePromotionResource)
+        {
+            var validator = new SavePromotionResourceValidator();
+            var validationResult = await validator.ValidateAsync(savePromotionResource);
+
+            var requestIsInvalid = id == 0 || !validationResult.IsValid;
+
+            if (requestIsInvalid)
+                return BadRequest(validationResult.Errors);
+
+            var promotionToBeUpdated = await _promotionService.GetPromotionById(id);
+
+            if (promotionToBeUpdated == null)
+                return NotFound();
+
+            _mapper.Map(savePromotionResource, promotionToBeUpdated);
+
+            var updatedPromotionEntity = _mapper.Map<SavePromotionDTO, Promotion>(savePromotionResource);
+
+            await _promotionService.UpdatePromotion(promotionToBeUpdated, updatedPromotionEntity);
+
+            var updatedPromotion = await _promotionService.GetPromotionById(id);
+
+            var promotionResource = _mapper.Map<Promotion, PromotionDTO>(updatedPromotion);
+
+            return Ok(promotionResource);
+        }
+
     }
 }
