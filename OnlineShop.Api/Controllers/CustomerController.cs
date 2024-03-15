@@ -45,21 +45,16 @@ namespace OnlineShop.Api.Controllers
         public async Task<ActionResult<CustomerDTO>> CreateCustomer([FromBody] SaveCustomerDTO saveCustomerResource)
         {
             var validator = new SaveCustomerResourceValidatior();
-
             var validationResult = await validator.ValidateAsync(saveCustomerResource);
 
             if (!validationResult.IsValid) 
                 return BadRequest(validationResult.Errors);
 
             var customerToCreate = _mapper.Map<SaveCustomerDTO, Customer>(saveCustomerResource);
-
             var newCustomer = await _customerService.CreateCustomer(customerToCreate);
+            var customerResource = _mapper.Map<Customer, CustomerDTO>(newCustomer);
 
-            var customer = await _customerService.GetCustomerById(newCustomer.CustomerID);
-
-            var customerResource = _mapper.Map<Customer, CustomerDTO>(customer);
-
-            return Ok(customerResource);
+            return CreatedAtAction(nameof(GetCustomerById), new { id = customerResource.CustomerID }, customerResource);
         }
 
         [HttpPut("{id}")]

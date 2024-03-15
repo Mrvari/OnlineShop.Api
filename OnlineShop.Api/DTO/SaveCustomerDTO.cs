@@ -6,5 +6,7 @@
         public string FirstName { get; set; } = "";
         public string LastName { get; set; } = "";
         public string email { get; set; } = "";
+
+        public int Password { get; set; }
     }
 }

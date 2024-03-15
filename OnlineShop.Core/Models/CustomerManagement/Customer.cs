@@ -12,16 +12,11 @@ namespace OnlineShop.Core.Models.CustomerManagement
         public int CustomerID { get; set; } //PK
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string email { get; set; }
+        public string Email { get; set; } // email özelliğini büyük harfle başlatmak iyi bir pratiktir
 
-        private string password;
+        public string Password { get; set; } // Password alanını public yapın
+
         public int Phone { get; set; }
-
-        public string Password
-        {
-            get { return password; }
-            set { password = value; }
-        }
 
         public ICollection<Order> Orders { get; set; }
         public ICollection<AddressInformation> AddressInformations { get; }

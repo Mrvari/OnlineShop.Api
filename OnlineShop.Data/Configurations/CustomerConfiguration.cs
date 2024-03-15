@@ -29,7 +29,7 @@ namespace OnlineShop.Data.Configurations
                 .HasMaxLength(50);
 
             builder
-                .Property(c => c.email)
+                .Property(c => c.Email)
                 .IsRequired()
                 .HasMaxLength(256);
 
