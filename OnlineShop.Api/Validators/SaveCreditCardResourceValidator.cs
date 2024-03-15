@@ -14,9 +14,6 @@ namespace OnlineShop.Api.Validators
                 .NotEmpty()
                 .MaximumLength(100);
 
-            RuleFor(p => p.CardNumber)
-                .NotEmpty()
-                .MaximumLength(16);
 
             RuleFor(p => p.ExpiryDate)
                 .NotEmpty();
