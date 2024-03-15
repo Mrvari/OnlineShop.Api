@@ -18,16 +18,6 @@ namespace OnlineShop.Services.Services
             this._unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<AddressInformation>> GetAllAddressInformation()
-        {
-            return await _unitOfWork.AddressInformations.GetAllAsync();
-        }
-
-        public async Task<AddressInformation> GetAddressInformationById(int id)
-        {
-            return await _unitOfWork.AddressInformations.GetWithAddressIDAsync(id);
-        }
-
         public async Task<AddressInformation> CreateAddress(AddressInformation newAddress)
         {
             await _unitOfWork.AddressInformations
@@ -36,19 +26,31 @@ namespace OnlineShop.Services.Services
             return newAddress;
         }
 
-        public async Task UpdateAddress(AddressInformation AddressToBeUpdated, AddressInformation Address)
-        {
-            AddressToBeUpdated.street = Address.street;
-
-            await _unitOfWork.CommitAsync();
-        }
-
         public async Task DeleteAddress(AddressInformation Address)
         {
             _unitOfWork.AddressInformations.Remove(Address);
 
             await _unitOfWork.CommitAsync();
         }
+
+        public async Task<IEnumerable<AddressInformation>> GetAllAddressInformation()
+        {
+            return await _unitOfWork.AddressInformations.GetAllAsync();
+        }
+
+        public async Task<AddressInformation> GetAddressInformationById(int id)
+        {
+            return await _unitOfWork.AddressInformations.GetWithAddressIDAsync(id);
+        }       
+
+        public async Task UpdateAddress(AddressInformation addressInformationToBeUpdated, AddressInformation address)
+        {
+            addressInformationToBeUpdated.street = address.street;
+
+            await _unitOfWork.CommitAsync();
+        }
+
+        
 
         
     }
