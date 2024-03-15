@@ -43,21 +43,16 @@ namespace OnlineShop.Api.Controllers
         public async Task<ActionResult<CreditCardDTO>> CreateCreditCard([FromBody] SaveCreditCardDTO saveCreditCardResource)
         {
             var validator = new SaveCreditCardResourceValidator();
-
             var validationResult = await validator.ValidateAsync(saveCreditCardResource);
 
             if (!validationResult.IsValid) //doğrulama sonucunu kotnrol eder
                 return BadRequest(validationResult.Errors);
 
             var creditCardToCreate = _mapper.Map<SaveCreditCardDTO, CreditCard>(saveCreditCardResource);
-
             var newCreditCard = await _creditCardService.CreateCreditCard(creditCardToCreate);
+            var creditCardResource = _mapper.Map<CreditCard, CreditCardDTO>(newCreditCard);
 
-            var creditCard = await _creditCardService.GetCreditCardById(newCreditCard.CardID);
-
-            var creditCardResource = _mapper.Map<CreditCard, CreditCardDTO>(creditCard);
-
-            return Ok(creditCardResource);
+            return CreatedAtAction(nameof(GetCreditCardById), new { id = creditCardResource.CardID }, creditCardResource);
         }
 
         [HttpPut("{id}")]
