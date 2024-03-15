@@ -19,7 +19,7 @@ builder.Services.AddDbContext<OnlineShopDbContext>(options =>
     options.UseSqlServer(configuration.GetConnectionString("DevConnection"),
     x => x.MigrationsAssembly("OnlineShop.Data")));
 
-builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<IAddressInformationService, AddressInformationService>();
 builder.Services.AddTransient<ICreditCardService, CreditCardService>();
 builder.Services.AddTransient<ICustomerService, CustomerService>();

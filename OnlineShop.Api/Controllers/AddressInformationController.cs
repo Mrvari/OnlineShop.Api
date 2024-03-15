@@ -34,28 +34,23 @@ namespace OnlineShop.Api.Controllers
             var addressInformation = await _addressInformationService.GetAddressInformationById(id);
             var addressInformationResource = _mapper.Map<AddressInformation, AddressInformationDTO>(addressInformation);
 
-            return Ok(addressInformationResource);
+            return Ok(addressInformationResource);         
         }
 
         [HttpPost("")]
         public async Task<ActionResult<AddressInformationDTO>> CreateAddress([FromBody] SaveAddressInformationDTO saveAddressInformationResource)
         {
             var validator = new SaveAddressInformationResourceValidator();
-
             var validationResult = await validator.ValidateAsync(saveAddressInformationResource);
 
             if (!validationResult.IsValid) //doğrulama sonucunu kotnrol eder
                 return BadRequest(validationResult.Errors);
 
             var addressToCreate = _mapper.Map<SaveAddressInformationDTO, AddressInformation>(saveAddressInformationResource);
-
             var newAddressInformation = await _addressInformationService.CreateAddress(addressToCreate);
+            var addressResource = _mapper.Map< AddressInformation, AddressInformationDTO>(newAddressInformation);
 
-            var address = await _addressInformationService.GetAddressInformationById(newAddressInformation.AddressID);
-
-            var addressResource = _mapper.Map< AddressInformation, AddressInformationDTO>(address);
-
-            return Ok(addressResource);
+            return CreatedAtAction(nameof(GetAddressInformationById), new { id = addressResource.AddressID }, addressResource);
         }
 
         [HttpPut("{id}")]
@@ -64,9 +59,7 @@ namespace OnlineShop.Api.Controllers
             var validator = new SaveAddressInformationResourceValidator();
             var validationResult = await validator.ValidateAsync(saveAddressInformationResource);
 
-            var requestIsInvalid = id == 0 || !validationResult.IsValid;
-
-            if (requestIsInvalid)
+            if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
             var addressToUpdate = await _addressInformationService.GetAddressInformationById(id);
@@ -79,6 +72,10 @@ namespace OnlineShop.Api.Controllers
             await _addressInformationService.UpdateAddress(addressToUpdate, addressInformation);
 
             var updatedAddressInformation = await _addressInformationService.GetAddressInformationById(id);
+
+            if (updatedAddressInformation == null)
+                return NotFound();
+
             var updatedAddressInformationResource = _mapper.Map<AddressInformation, AddressInformationDTO> (updatedAddressInformation);
 
             return Ok(updatedAddressInformationResource);

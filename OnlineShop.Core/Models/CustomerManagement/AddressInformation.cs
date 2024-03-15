@@ -10,7 +10,7 @@ namespace OnlineShop.Core.Models.CustomerManagement
     {
         public int AddressID { get; set; } //PK
         public int? CustomerID { get; set; } //FK (?) => müşteri adres kaydı olmadan da olabilir
-        public int OrderID { get; set; }
+        public int OrderID { get; set; } //Fk
         public string County { get; set; }
         public string street { get; set; }
         public int zipcode { get; set; }
