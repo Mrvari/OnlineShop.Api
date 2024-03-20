@@ -23,6 +23,8 @@ namespace OnlineShop.Services.Services
             await _unitOfWork.AddressInformations
                 .AddAsync(newAddress);
 
+            //await _unitOfWork.CommitAsync();
+
             return newAddress;
         }
 

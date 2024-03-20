@@ -27,10 +27,9 @@ namespace OnlineShop.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
 
-        public OnlineShopDbContext(DbContextOptions<OnlineShopDbContext> options) : base(options)
-        {
-
-        }
+        public OnlineShopDbContext(DbContextOptions<OnlineShopDbContext> options) 
+            : base(options)
+        { }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

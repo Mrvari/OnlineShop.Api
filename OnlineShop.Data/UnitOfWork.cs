@@ -48,6 +48,7 @@ namespace OnlineShop.Data
 
         public void Dispose()
         {
+            CommitAsync().GetAwaiter().GetResult();
             _context.Dispose();
         }
 
