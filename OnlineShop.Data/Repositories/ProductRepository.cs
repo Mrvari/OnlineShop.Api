@@ -1,12 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnlineShop.Core.Models.CustomerManagement;
-using OnlineShop.Core.Models.ProductManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlineShop.Data.Repositories
 {
@@ -16,25 +10,18 @@ namespace OnlineShop.Data.Repositories
             : base(context)
         { }
 
-        public async Task<IEnumerable<Product>> GetAllWithProductAsync()
+        public async Task<IEnumerable<Product>> GetAllWithStocksAsync()
         {
             return await OnlineShopDbContext.Products
-                .Include( s => s.ShoppingCart)
+                .Include( pr => pr.Stocks)
                 .ToListAsync();
         }
 
-        public async Task<Product> GetWithProductByIdAsync(int ProductID)
+        public Task<Product> GetWithStockByIdAsync(int id)
         {
-            return await OnlineShopDbContext.Products
-                .Include ( s => s.ShoppingCart)
-                .SingleOrDefaultAsync(p => p.ProductID == ProductID);
-        }
-        public async Task<IEnumerable<Product>> GetAllWithProductByPriceAsync(int Price)
-        {
-            return await OnlineShopDbContext.Products
-            .Include(s => s.ShoppingCart)
-                .Where(s => s.Price == Price)
-                 .ToListAsync();
+            return OnlineShopDbContext.Products
+                .Include (pr => pr.Stocks)
+                .SingleOrDefaultAsync(pr => pr.Id == id);
         }
 
         private OnlineShopDbContext OnlineShopDbContext

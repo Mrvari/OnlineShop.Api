@@ -1,5 +1,6 @@
 ﻿using OnlineShop.Core;
-using OnlineShop.Core.Models.CustomerManagement;
+using OnlineShop.Core.Models;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -39,12 +40,12 @@ namespace OnlineShop.Services.Services
         public async Task<Customer> GetCustomerById(int id)
         {
             return await _unitOfWork.Customers
-                .GetWithCustomerByIdAsync(id);
+                .GetWithCreditCardsByIdAsync(id);
         }
 
         public async Task UpdateCustomer(Customer CustomerToBeUpdated, Customer customer)
         {
-            CustomerToBeUpdated.CustomerID = customer.CustomerID;
+            CustomerToBeUpdated.Id = customer.Id;
             await _unitOfWork.CommitAsync();
         }
     }

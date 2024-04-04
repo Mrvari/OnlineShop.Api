@@ -23,12 +23,12 @@ namespace OnlineShop.Core
         IAddressInformationRepository AddressInformations { get; }
         ICreditCardRepository CreditCards { get; }
         ICustomerRepository Customers { get; }
-        IOrderHistoryRepository OrderHistories { get; }
+        //IOrderHistoryRepository OrderHistories { get; }
         IOrderRepository Orders { get; }
         IPaymentInformationRepository PaymentInformations { get; }
         IProductRepository Products { get; }
-        IPromotionRepository Promotions { get; }
-        IReturnRepository Returns { get; }
+        //IPromotionRepository Promotions { get; }
+        IReturnedProductRepository ReturnedProducts { get; }
         IShoppingCartRepository ShoppingCarts { get; }
         IStockRepository Stocks { get; }
 

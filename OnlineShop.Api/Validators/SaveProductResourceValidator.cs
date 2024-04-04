@@ -11,9 +11,6 @@ namespace OnlineShop.Api.Validators
     {
         public SaveProductResourceValidator() 
         {
-            //lambda expression ile hangi property üzerinden kural yazılacağı sağlanır
-            RuleFor(p => p.ProductID)
-                .NotEmpty();
 
             RuleFor(p => p.ProductName)
                 .NotEmpty()
@@ -36,6 +33,14 @@ namespace OnlineShop.Api.Validators
             RuleFor(p => p.TechnicalSpecifications)
                 .NotEmpty()
                 .MaximumLength(250);
+
+            RuleFor(p => p.Reviews)
+                .NotEmpty()
+                .MaximumLength(50);
+
+            RuleFor(p => p.ReviewScores)
+                .NotEmpty();
+            
         }
     }
 }

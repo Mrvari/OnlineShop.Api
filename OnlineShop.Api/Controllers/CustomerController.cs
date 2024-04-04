@@ -3,7 +3,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Api.DTO;
 using OnlineShop.Api.Validators;
-using OnlineShop.Core.Models.CustomerManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Services;
 using OnlineShop.Services.Services;
 
@@ -52,9 +52,10 @@ namespace OnlineShop.Api.Controllers
 
             var customerToCreate = _mapper.Map<SaveCustomerDTO, Customer>(saveCustomerResource);
             var newCustomer = await _customerService.CreateCustomer(customerToCreate);
+
             var customerResource = _mapper.Map<Customer, CustomerDTO>(newCustomer);
 
-            return CreatedAtAction(nameof(GetCustomerById), new { id = customerResource.CustomerID }, customerResource);
+            return Ok(customerResource);
         }
 
         [HttpPut("{id}")]

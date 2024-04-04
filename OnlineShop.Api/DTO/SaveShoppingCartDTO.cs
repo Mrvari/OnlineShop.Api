@@ -2,6 +2,6 @@
 {
     public class SaveShoppingCartDTO
     {
-        public int CartID { get; set; }
+        //public int CartID { get; set; }
     }
 }

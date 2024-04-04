@@ -1,5 +1,4 @@
-﻿using OnlineShop.Core.Models.OrderManagement;
-using OnlineShop.Core.Models.ProductManagement;
+﻿using OnlineShop.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +12,7 @@ namespace OnlineShop.Core.Services
         Task<IEnumerable<Product>> GetAllProduct();
         Task<Product> GetProductById(int id);
         Task<Product> CreateProduct(Product newProduct);
-        Task UpdateProduct(Product ProductToBeUpdated, Product product);
+        Task UpdateProduct(Product productToBeUpdated, Product product);
         Task DeleteProduct(Product product);
     }
 }

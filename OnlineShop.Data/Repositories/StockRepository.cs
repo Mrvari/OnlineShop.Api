@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnlineShop.Core.Models.StockManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Repositories;
 using System;
 using System.Collections.Generic;
@@ -15,25 +15,25 @@ namespace OnlineShop.Data.Repositories
         : base(context)
         { }
 
-        public async Task<IEnumerable<Stock>> GetAllWithShoppingCartAsync()
+        public async Task<IEnumerable<Stock>> GetAllWithProductAsync()
         {
             return await OnlineShopDbContext.Stocks
-                .Include(p => p.Product)
+                .Include(s => s.Product)
                 .ToListAsync();
         }
 
-        public Task<Stock> GetWithStockByIdAsync(int StockID)
-        {
-            return OnlineShopDbContext.Stocks
-                .Include (p => p.Product)
-                .SingleOrDefaultAsync(s => s.StockID == StockID);
-        }
-
-        public async Task<IEnumerable<Stock>> GetAllWithStockByProductIDAsync(int ProductID)
+        public async Task<Stock> GetWithProductByIdAsync(int id)
         {
             return await OnlineShopDbContext.Stocks
-                .Where(s => s.ProductID == ProductID)
+                .Include (s => s.Product)
+                .SingleOrDefaultAsync(s => s.Id == id);
+        }
+
+        public async Task<IEnumerable<Stock>> GetAllWithProductByStockIdAsync(int stockProductId)
+        {
+            return await OnlineShopDbContext.Stocks
                 .Include(s => s.Product)
+                .Where(s => s.StockProductId == stockProductId)                
                 .ToListAsync();
         }
 

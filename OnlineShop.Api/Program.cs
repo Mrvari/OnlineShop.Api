@@ -24,11 +24,11 @@ builder.Services.AddTransient<IAddressInformationService, AddressInformationServ
 builder.Services.AddTransient<ICreditCardService, CreditCardService>();
 builder.Services.AddTransient<ICustomerService, CustomerService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
-builder.Services.AddTransient<IOrderHistoryService, OrderHistoryService>();
+
 builder.Services.AddTransient<IPaymentInformationService, PaymentInformationService>();
 builder.Services.AddTransient<IProductService, ProductService>();
-builder.Services.AddTransient<IPromotionService, PromotionService>();
-builder.Services.AddTransient<IReturnService,  ReturnService>();
+
+builder.Services.AddTransient<IReturnedProductService, ReturnedProductService>();
 builder.Services.AddTransient<IShoppingCartService, ShoppingCartService>();
 builder.Services.AddTransient<IStockService, StockService>();
 
@@ -52,4 +52,3 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();
-

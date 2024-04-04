@@ -1,15 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnlineShop.Core.Models.CustomerManagement;
-using OnlineShop.Core.Models.OrderManagement;
-using OnlineShop.Core.Models.ProductManagement;
-using OnlineShop.Core.Models.PromotionManagement;
-using OnlineShop.Core.Models.StockManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Data.Configurations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlineShop.Data
 {
@@ -18,18 +9,16 @@ namespace OnlineShop.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<AddressInformation> AddressInformations { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderHistory> OrderHistories { get; set; }
         public DbSet<PaymentInformation> PaymentInformations { get; set; }
         public DbSet<CreditCard> CreditCards { get; set; }
-        public DbSet<Return> Returns { get; set; }
+        public DbSet<ReturnedProduct> ReturnedProducts { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public DbSet<Stock> Stocks { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<Promotion> Promotions { get; set; }
 
         public OnlineShopDbContext(DbContextOptions<OnlineShopDbContext> options) 
             : base(options)
-        { }
+        { }   
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -45,9 +34,6 @@ namespace OnlineShop.Data
             builder
                 .ApplyConfiguration(new OrderConfiguration());
 
-            builder
-                .ApplyConfiguration(new OrderHistoryConfiguration());
-
             builder 
                 .ApplyConfiguration(new PaymentInformationConfiguration());
 
@@ -55,10 +41,7 @@ namespace OnlineShop.Data
                 .ApplyConfiguration(new ProductConfiguration());
 
             builder
-                .ApplyConfiguration(new PromotionConfiguration());
-
-            builder
-                .ApplyConfiguration(new ReturnConfiguration());
+                .ApplyConfiguration(new ReturnedProductConfiguration());
 
             builder
                 .ApplyConfiguration(new  ShoppingCartConfiguration());
@@ -67,5 +50,15 @@ namespace OnlineShop.Data
                 .ApplyConfiguration(new StockConfiguration());
 
         }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=MusicMarket;Trusted_Connection=True;MultipleActiveResultSets=true", builder =>
+                    builder.MigrationsAssembly("OnlineShop.Api")); // Bu satır migrations assembly'sini belirtir
+            }
+        }
+
     }
 }

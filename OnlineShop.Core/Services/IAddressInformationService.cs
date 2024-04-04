@@ -1,4 +1,4 @@
-﻿using OnlineShop.Core.Models.CustomerManagement;
+﻿using OnlineShop.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +17,7 @@ namespace OnlineShop.Core.Services
         Task<IEnumerable<AddressInformation>> GetAllAddressInformation();
         Task<AddressInformation> GetAddressInformationById(int id);
         Task<AddressInformation> CreateAddress(AddressInformation newAddress);
-        Task UpdateAddress(AddressInformation AddressToBeUpdated, AddressInformation Address);
+        Task UpdateAddress(AddressInformation addressToBeUpdated, AddressInformation address);
         Task DeleteAddress(AddressInformation updatedAddress);
     }
 }

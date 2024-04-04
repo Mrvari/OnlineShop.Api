@@ -1,6 +1,5 @@
 ﻿using OnlineShop.Core;
-using OnlineShop.Core.Models.OrderManagement;
-using OnlineShop.Core.Models.StockManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -38,12 +37,12 @@ namespace OnlineShop.Services.Services
 
         public async Task<Stock> GetStockById(int id)
         {
-            return await _unitOfWork.Stocks.GetWithStockByIdAsync(id);
+            return await _unitOfWork.Stocks.GetWithProductByIdAsync(id);
         }
 
         public async Task UpdateStock(Stock StockToBeUpdated, Stock stock)
         {
-            StockToBeUpdated.StockID = stock.StockID;
+            StockToBeUpdated.Id = stock.Id;
             await _unitOfWork.CommitAsync();
         }
     }

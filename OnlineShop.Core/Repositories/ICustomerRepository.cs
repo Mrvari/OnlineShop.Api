@@ -1,4 +1,4 @@
-﻿using OnlineShop.Core.Models.CustomerManagement;
+﻿using OnlineShop.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +9,8 @@ namespace OnlineShop.Core.Repositories
 {
     public interface ICustomerRepository : IRepository<Customer>
     {
-        Task<IEnumerable<Customer>> GetAllWithCustomerAsync();
-        Task<Customer> GetWithCustomerByIdAsync(int CustomerID);
-        Task<IEnumerable<Customer>> GetAllWithCustomerByFirstNameAsync(string FirstName);
+        Task<IEnumerable<Customer>> GetAllWithCreditCardAsync();
+        Task<Customer> GetWithCreditCardsByIdAsync(int id);
+
     }
 }

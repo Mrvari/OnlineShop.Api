@@ -1,13 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using OnlineShop.Core.Models.ProductManagement;
-using OnlineShop.Core.Models.PromotionManagement;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
+using OnlineShop.Core.Models;
+
 
 namespace OnlineShop.Data.Configurations
 {
@@ -16,73 +10,58 @@ namespace OnlineShop.Data.Configurations
         public void Configure(EntityTypeBuilder<Product> builder)
         {
             builder
-                .HasKey(p => p.ProductID);
+                .HasKey(pr => pr.Id);
 
             builder
-                .Property(p => p.ProductName)
+                .Property(pr => pr.Id)
+                .UseIdentityColumn();
+
+            builder
+                .Property(pr => pr.ProductName)
                 .IsRequired()
                 .HasMaxLength(20);
 
             builder
-                .Property(p => p.CategoryID)
+                .Property(pr => pr.CategoryId)
                 .IsRequired();
 
             builder
-                .Property(p => p.ShoppingCartID)
-                .IsRequired();
-
-            builder
-                .Property(p => p.Price)
-                .IsRequired();
-
-            builder
-                .Property(p => p.Description)
-                .HasMaxLength(200);
-
-            builder
-                .Property(p => p.Images)
-                .IsRequired();
-
-            builder
-                .Property(p => p.Brand)
-                .IsRequired();
-
-            builder
-                .Property(p => p.TechnicalSpecifications)
-                .HasMaxLength(200);
-
-            builder
-                .Property(p => p.Reviews)
-                .HasMaxLength(200);
-
-            builder
-                .Property(p => p.ReviewScores)
-                .IsRequired()
-                .HasPrecision(3, 2);
-
-            builder.HasOne(p => p.Stock)
-               .WithOne(s => s.Product)
-               .HasForeignKey<Product>(p => p.StockID)
+               .Property(pr => pr.Price)
                .IsRequired();
 
             builder
-                .HasMany(p => p.Promotions) // Bir ürünün birden fazla promosyonu olabilir
-                .WithMany(pr => pr.Products) // Bir promosyonun birden fazla ürünü olabilir
-                .UsingEntity<Dictionary<string, object>>(
-                    "ProductPromotion",
-                    j => j
-                        .HasOne<Promotion>()
-                        .WithMany()
-                        .HasForeignKey("PromotionId"),
-                    j => j
-                        .HasOne<Product>()
-                        .WithMany()
-                        .HasForeignKey("ProductId"),
-                    j =>
-                    {
-                        j.HasKey("ProductId", "PromotionId");
-                        j.ToTable("ProductPromotion");
-                    });
+                .Property(pr => pr.Description)
+                .HasMaxLength(200);
+
+            builder
+                .Property(pr => pr.Images)
+                .IsRequired();
+
+            builder
+                .Property(pr => pr.Brand)
+                .IsRequired();
+
+            builder
+                .Property(pr => pr.TechnicalSpecifications)
+                .HasMaxLength(200);
+
+            builder
+                .Property(pr => pr.Reviews)
+                .HasMaxLength(200);
+
+            builder
+                .Property(pr => pr.ReviewScores)
+                .IsRequired()
+                .HasPrecision(3, 2);
+
+            builder
+                .HasOne(pr => pr.ShoppingCart)
+                .WithMany(sc => sc.Products)
+                .HasForeignKey(pr => pr.CartId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .ToTable("Products");
         }
     }
 }

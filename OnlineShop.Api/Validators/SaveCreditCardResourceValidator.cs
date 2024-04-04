@@ -7,13 +7,9 @@ namespace OnlineShop.Api.Validators
     {
         public SaveCreditCardResourceValidator() 
         {
-            RuleFor(p => p.CardID)
-                .NotEmpty();
-
             RuleFor(p => p.CardHolderName)
                 .NotEmpty()
                 .MaximumLength(100);
-
 
             RuleFor(p => p.ExpiryDate)
                 .NotEmpty();

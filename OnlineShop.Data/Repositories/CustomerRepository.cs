@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnlineShop.Core.Models.CustomerManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlineShop.Data.Repositories
 {
@@ -15,25 +10,18 @@ namespace OnlineShop.Data.Repositories
             : base(context) 
         { }
         
-        public async Task<IEnumerable<Customer>> GetAllWithCustomerAsync()
+        public async Task<IEnumerable<Customer>> GetAllWithCreditCardAsync()
         {
-            // Tüm müşterileri içeren bir liste döndürür
-            return await OnlineShopDbContext.Customers.ToListAsync();
-        }
-
-        public async Task<Customer> GetWithCustomerByIdAsync(int CustomerID)
-        {
-            // ID'si verilen müşteriyi döndürür
             return await OnlineShopDbContext.Customers
-            .SingleOrDefaultAsync(c => c.CustomerID == CustomerID);
-        }
-
-        public async Task<IEnumerable<Customer>> GetAllWithCustomerByFirstNameAsync(string FirstName)
-        {
-            // İlk ismi verilen müşterileri döndürür
-            return await OnlineShopDbContext.Customers
-                .Where(c => c.FirstName == FirstName)
+                .Include(c => c.CreditCards)
                 .ToListAsync();
+        }
+
+        public Task<Customer> GetWithCreditCardsByIdAsync(int id)
+        {
+            return OnlineShopDbContext.Customers
+                .Include(c => c.CreditCards)
+                .SingleOrDefaultAsync(c => c.Id == id);
         }
         private OnlineShopDbContext OnlineShopDbContext
         {

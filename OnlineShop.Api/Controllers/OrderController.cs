@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Api.DTO;
 using OnlineShop.Api.Validators;
-using OnlineShop.Core.Models.OrderManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Services;
 
 namespace OnlineShop.Api.Controllers
@@ -51,7 +51,7 @@ namespace OnlineShop.Api.Controllers
 
             var newOrder = await _orderService.CreateOrder(orderToCreate);
 
-            var order = await _orderService.GetOrderById(newOrder.OrderID);
+            var order = await _orderService.GetOrderById(newOrder.Id);
 
             var orderResoruce = _mapper.Map<Order, OrderDTO>(order);
 

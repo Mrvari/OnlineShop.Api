@@ -4,16 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OnlineShop.Core.Models.CustomerManagement
+namespace OnlineShop.Core.Models
 {
     public class CreditCard
     {
-        public int CardID { get; set; }
-        public int CustomerID { get; set; }
+        public int Id { get; set; }
         public string CardHolderName { get; set; }
 
         private string CardNumber;
-        private DateTime ExpiryDate { get; set; }
+        private string ExpiryDate { get; set; }
 
         private int CVV;
 
@@ -23,7 +22,7 @@ namespace OnlineShop.Core.Models.CustomerManagement
             set { CardNumber = value; }
         }
 
-        public DateTime expiryDate
+        public string expiryDate
         {
             get { return ExpiryDate; }
             set { ExpiryDate = value; }
@@ -35,6 +34,9 @@ namespace OnlineShop.Core.Models.CustomerManagement
             set { CVV = value; }
         }
 
-        public Customer? Customer { get; set; }
+        public int CustomerId { get; set; }
+       
+        public Customer Customer { get; set; }
+        
     }
 }

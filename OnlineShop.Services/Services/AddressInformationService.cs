@@ -1,5 +1,5 @@
 ﻿using OnlineShop.Core;
-using OnlineShop.Core.Models.CustomerManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -42,7 +42,7 @@ namespace OnlineShop.Services.Services
 
         public async Task<AddressInformation> GetAddressInformationById(int id)
         {
-            return await _unitOfWork.AddressInformations.GetWithAddressIDAsync(id);
+            return await _unitOfWork.AddressInformations.GetWithCustomerByIdAsync(id);
         }       
 
         public async Task UpdateAddress(AddressInformation addressInformationToBeUpdated, AddressInformation address)

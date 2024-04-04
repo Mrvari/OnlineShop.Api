@@ -2,6 +2,6 @@
 {
     public class SaveStockDTO
     {
-        public int StockID { get; set; }
+        //public int StockID { get; set; }
     }
 }

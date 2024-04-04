@@ -1,5 +1,5 @@
 ﻿using OnlineShop.Core;
-using OnlineShop.Core.Models.OrderManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -37,12 +37,12 @@ namespace OnlineShop.Services.Services
 
         public async Task<ShoppingCart> GetShoppingCartById(int id)
         {
-            return await _unitOfWork.ShoppingCarts.GetWithShoppingCartByIdAsync(id);
+            return await _unitOfWork.ShoppingCarts.GetWithCustomerByIdAsync(id);
         }
 
         public async Task UpdateShoppingCart(ShoppingCart ShoppingCartToBeUpdated, ShoppingCart shoppingCart)
         {
-            ShoppingCartToBeUpdated.CartID = shoppingCart.CartID;
+            ShoppingCartToBeUpdated.Id = shoppingCart.Id;
             await _unitOfWork.CommitAsync();
         }
     }

@@ -1,6 +1,5 @@
 ﻿using OnlineShop.Core;
-using OnlineShop.Core.Models.OrderManagement;
-using OnlineShop.Core.Models.ProductManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Services;
 using System;
 using System.Collections.Generic;

@@ -3,7 +3,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Api.DTO;
 using OnlineShop.Api.Validators;
-using OnlineShop.Core.Models.CustomerManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Services;
 using OnlineShop.Services.Services;
 
@@ -52,7 +52,7 @@ namespace OnlineShop.Api.Controllers
             var newCreditCard = await _creditCardService.CreateCreditCard(creditCardToCreate);
             var creditCardResource = _mapper.Map<CreditCard, CreditCardDTO>(newCreditCard);
 
-            return CreatedAtAction(nameof(GetCreditCardById), new { id = creditCardResource.CardID }, creditCardResource);
+            return Ok(creditCardResource);
         }
 
         [HttpPut("{id}")]

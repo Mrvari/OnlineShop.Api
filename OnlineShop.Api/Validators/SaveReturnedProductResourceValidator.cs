@@ -3,13 +3,10 @@ using OnlineShop.Api.DTO;
 
 namespace OnlineShop.Api.Validators
 {
-    public class SaveReturnResourceValidator: AbstractValidator<SaveReturnDTO>
+    public class SaveReturnedProductResourceValidator: AbstractValidator<SaveReturnedProductDTO>
     {
-        public SaveReturnResourceValidator() 
+        public SaveReturnedProductResourceValidator() 
         {
-            RuleFor(p => p.ReturnID)
-                .NotEmpty();
-
             RuleFor(p => p.ReturnReason)
                 .NotEmpty()
                 .MaximumLength(200);

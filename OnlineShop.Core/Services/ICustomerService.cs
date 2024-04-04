@@ -1,4 +1,4 @@
-﻿using OnlineShop.Core.Models.CustomerManagement;
+﻿using OnlineShop.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace OnlineShop.Core.Services
         Task<IEnumerable<Customer>> GetAllCustomer();
         Task<Customer> GetCustomerById(int id);
         Task<Customer> CreateCustomer(Customer newCustomer);
-        Task UpdateCustomer(Customer CustomerToBeUpdated, Customer customer);
-        Task DeleteCustomer(Customer Customer);
+        Task UpdateCustomer(Customer customerToBeUpdated, Customer customer);
+        Task DeleteCustomer(Customer customer);
     }
 }

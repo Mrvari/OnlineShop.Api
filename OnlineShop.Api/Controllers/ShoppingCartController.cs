@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Api.DTO;
 using OnlineShop.Api.Validators;
-using OnlineShop.Core.Models.OrderManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Services;
 using OnlineShop.Services.Services;
 
@@ -53,7 +53,7 @@ namespace OnlineShop.Api.Controllers
 
             var newShoppingCart = await _shoppingCartService.CreateShoppingCart(shoppingCartToCreate);
 
-            var ShoppingCart = await _shoppingCartService.GetShoppingCartById(newShoppingCart.CartID);
+            var ShoppingCart = await _shoppingCartService.GetShoppingCartById(newShoppingCart.Id);
 
             var shoppingCartResource = _mapper.Map<ShoppingCart, ShoppingCartDTO>(ShoppingCart);
 

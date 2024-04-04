@@ -7,9 +7,6 @@ namespace OnlineShop.Api.Validators
     {
         public SavePaymentInformationResourceValidator() 
         {
-            RuleFor(p => p.PaymentID)
-                .NotEmpty();
-
             RuleFor(p => p.PaymentDate)
                 .NotEmpty();
 

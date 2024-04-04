@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
-using OnlineShop.Core.Models.CustomerManagement;
 using OnlineShop.Core.Services;
 using OnlineShop.Api.DTO;
 using OnlineShop.Api.Validators;
+using OnlineShop.Core.Models;
 
 namespace OnlineShop.Api.Controllers
 {
@@ -50,7 +50,7 @@ namespace OnlineShop.Api.Controllers
             var newAddressInformation = await _addressInformationService.CreateAddress(addressToCreate);
             var addressResource = _mapper.Map< AddressInformation, AddressInformationDTO>(newAddressInformation);
 
-            return CreatedAtAction(nameof(GetAddressInformationById), new { id = addressResource.AddressID }, addressResource);
+            return Ok(addressResource);
         }
 
         [HttpPut("{id}")]

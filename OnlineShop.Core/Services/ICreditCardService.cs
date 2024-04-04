@@ -1,4 +1,4 @@
-﻿using OnlineShop.Core.Models.CustomerManagement;
+﻿using OnlineShop.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,4 +1,4 @@
-﻿using OnlineShop.Core.Models.CustomerManagement;
+﻿using OnlineShop.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +9,8 @@ namespace OnlineShop.Core.Repositories
 {
     public interface ICreditCardRepository : IRepository<CreditCard>
     {
-        Task<IEnumerable<CreditCard>> GetAllWithCreditCardAsync();
-        Task<CreditCard> GetWithCreditCardByIdAsync(int CardID);
-        Task<IEnumerable<CreditCard>> GetAllWithCreditCardByCustomerIdAsync(int CustomerID);
+        Task<IEnumerable<CreditCard>> GetAllWithCustomerAsync();
+        Task<CreditCard> GetWithCreditCardByIdAsync(int id);
+        Task<IEnumerable<CreditCard>> GetAllWithCustomerByCustomerIdAsync(int customerId);
     }
 }

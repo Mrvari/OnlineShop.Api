@@ -7,9 +7,6 @@ namespace OnlineShop.Api.Validators
     {
         public SaveCustomerResourceValidatior() 
         {
-            RuleFor(p => p.CustomerID)
-                .NotEmpty();
-
             RuleFor(p => p.FirstName)
                 .NotEmpty()
                 .MaximumLength(50);

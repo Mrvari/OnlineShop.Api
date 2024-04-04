@@ -17,29 +17,25 @@ namespace OnlineShop.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.1")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("OnlineShop.Core.Models.CustomerManagement.AddressInformation", b =>
+            modelBuilder.Entity("OnlineShop.Core.Models.AddressInformation", b =>
                 {
-                    b.Property<int>("AddressID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AddressID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("County")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("CustomerID")
-                        .IsRequired()
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderID")
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<string>("street")
@@ -50,26 +46,26 @@ namespace OnlineShop.Data.Migrations
                     b.Property<int>("zipcode")
                         .HasColumnType("int");
 
-                    b.HasKey("AddressID");
+                    b.HasKey("Id");
 
-                    b.HasIndex("CustomerID");
+                    b.HasIndex("CustomerId");
 
-                    b.ToTable("AddressInformations");
+                    b.ToTable("AddressInformations", (string)null);
                 });
 
-            modelBuilder.Entity("OnlineShop.Core.Models.CustomerManagement.CreditCard", b =>
+            modelBuilder.Entity("OnlineShop.Core.Models.CreditCard", b =>
                 {
-                    b.Property<int>("CardID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CardID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CardHolderName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CustomerID")
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<string>("cardNumber")
@@ -79,20 +75,29 @@ namespace OnlineShop.Data.Migrations
                     b.Property<int>("cvv")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("expiryDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("expiryDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CardID");
+                    b.HasKey("Id");
 
-                    b.HasIndex("CustomerID");
+                    b.HasIndex("CustomerId");
 
-                    b.ToTable("CreditCards");
+                    b.ToTable("CreditCards", (string)null);
                 });
 
-            modelBuilder.Entity("OnlineShop.Core.Models.CustomerManagement.Customer", b =>
+            modelBuilder.Entity("OnlineShop.Core.Models.Customer", b =>
                 {
-                    b.Property<int>("CustomerID")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -112,100 +117,68 @@ namespace OnlineShop.Data.Migrations
                     b.Property<int>("Phone")
                         .HasColumnType("int");
 
-                    b.Property<string>("email")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                    b.HasKey("Id");
 
-                    b.HasKey("CustomerID");
-
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
-            modelBuilder.Entity("OnlineShop.Core.Models.OrderManagement.Order", b =>
+            modelBuilder.Entity("OnlineShop.Core.Models.Order", b =>
                 {
-                    b.Property<int>("OrderID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CustomerID")
+                    b.Property<int>("CartId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OrderDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("OrderStatus")
                         .HasColumnType("int");
 
-                    b.Property<int>("ShoppingCartID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalAmount")
+                    b.Property<int?>("ShoppingCartId")
                         .HasColumnType("int");
 
                     b.Property<int>("TrackingNumber")
                         .HasColumnType("int");
 
-                    b.Property<string>("deliveryAdress")
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId")
+                        .IsUnique();
+
+                    b.HasIndex("CustomerId")
+                        .IsUnique();
+
+                    b.HasIndex("ShoppingCartId");
+
+                    b.ToTable("Orders", (string)null);
+                });
+
+            modelBuilder.Entity("OnlineShop.Core.Models.PaymentInformation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PaymentDate")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("OrderID");
-
-                    b.HasIndex("CustomerID");
-
-                    b.HasIndex("ShoppingCartID")
-                        .IsUnique();
-
-                    b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("OnlineShop.Core.Models.OrderManagement.OrderHistory", b =>
-                {
-                    b.Property<int>("HistoryID")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("PaymentInformationOrderId")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HistoryID"));
-
-                    b.Property<int>("CustomerID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("OrderID")
-                        .HasColumnType("int");
-
-                    b.HasKey("HistoryID");
-
-                    b.HasIndex("CustomerID")
-                        .IsUnique();
-
-                    b.ToTable("OrderHistories");
-                });
-
-            modelBuilder.Entity("OnlineShop.Core.Models.OrderManagement.PaymentInformation", b =>
-                {
-                    b.Property<int>("PaymentID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentID"));
-
-                    b.Property<int>("CardID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PaymentAmount")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("PaymentStatus")
                         .IsRequired()
@@ -216,111 +189,32 @@ namespace OnlineShop.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("PaymentID");
+                    b.HasKey("Id");
 
-                    b.HasIndex("OrderID")
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("PaymentInformationOrderId")
                         .IsUnique();
 
-                    b.ToTable("PaymentInformations");
+                    b.ToTable("Payments", (string)null);
                 });
 
-            modelBuilder.Entity("OnlineShop.Core.Models.OrderManagement.Return", b =>
+            modelBuilder.Entity("OnlineShop.Core.Models.Product", b =>
                 {
-                    b.Property<int>("ReturnID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReturnID"));
-
-                    b.Property<string>("Condution")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CustomerID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrderID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuantityReturned")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RefaundAmount")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ReturnDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ReturnReason")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ReturnStatus")
-                        .HasColumnType("int");
-
-                    b.HasKey("ReturnID");
-
-                    b.HasIndex("OrderID")
-                        .IsUnique();
-
-                    b.ToTable("Returns");
-                });
-
-            modelBuilder.Entity("OnlineShop.Core.Models.OrderManagement.ShoppingCart", b =>
-                {
-                    b.Property<int>("CartID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartID"));
-
-                    b.Property<int>("Cuponcode")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CustomerID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DiscountAmount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ItemCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PaymentStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ProducrID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TotalAmount")
-                        .HasColumnType("int");
-
-                    b.HasKey("CartID");
-
-                    b.ToTable("ShoppingCarts");
-                });
-
-            modelBuilder.Entity("OnlineShop.Core.Models.ProductManagement.Product", b =>
-                {
-                    b.Property<int>("ProductID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Brand")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CategoryID")
+                    b.Property<int>("CartId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -349,248 +243,261 @@ namespace OnlineShop.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("ShoppingCartID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StockID")
-                        .HasColumnType("int");
-
                     b.Property<string>("TechnicalSpecifications")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.HasKey("ProductID");
+                    b.HasKey("Id");
 
-                    b.HasIndex("ShoppingCartID");
+                    b.HasIndex("CartId");
 
-                    b.HasIndex("StockID")
+                    b.ToTable("Products", (string)null);
+                });
+
+            modelBuilder.Entity("OnlineShop.Core.Models.ReturnedProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Contiditon")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReturnDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReturnReason")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ReturnStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReturnedOrderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ReturnedOrderId")
                         .IsUnique();
 
-                    b.ToTable("Products");
+                    b.ToTable("Returns", (string)null);
                 });
 
-            modelBuilder.Entity("OnlineShop.Core.Models.PromotionManagement.Promotion", b =>
+            modelBuilder.Entity("OnlineShop.Core.Models.ShoppingCart", b =>
                 {
-                    b.Property<int>("PromotionID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PromotionID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Cuponcode")
-                        .HasMaxLength(20)
+                    b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CustomerID")
+                    b.Property<int>("ShoppingCartCustomerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("DiscountAmount")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ExpireDate")
-                        .HasColumnType("datetime2");
+                    b.HasKey("Id");
 
-                    b.Property<int>("ProductID")
-                        .HasColumnType("int");
+                    b.HasIndex("CustomerId");
 
-                    b.HasKey("PromotionID");
+                    b.HasIndex("ShoppingCartCustomerId")
+                        .IsUnique();
 
-                    b.ToTable("Promotions");
+                    b.ToTable("ShoppingCarts", (string)null);
                 });
 
-            modelBuilder.Entity("OnlineShop.Core.Models.StockManagement.Stock", b =>
+            modelBuilder.Entity("OnlineShop.Core.Models.Stock", b =>
                 {
-                    b.Property<int>("StockID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StockID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("InTransitQuantity")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("LastUpdate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("LastUpdate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProductID")
+                    b.Property<int?>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.HasKey("StockID");
-
-                    b.ToTable("Stocks");
-                });
-
-            modelBuilder.Entity("ProductPromotion", b =>
-                {
-                    b.Property<int>("ProductId")
+                    b.Property<int>("StockProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PromotionId")
-                        .HasColumnType("int");
+                    b.HasKey("Id");
 
-                    b.HasKey("ProductId", "PromotionId");
+                    b.HasIndex("ProductId");
 
-                    b.HasIndex("PromotionId");
+                    b.HasIndex("StockProductId")
+                        .IsUnique();
 
-                    b.ToTable("ProductPromotion", (string)null);
+                    b.ToTable("Stocks", (string)null);
                 });
 
-            modelBuilder.Entity("OnlineShop.Core.Models.CustomerManagement.AddressInformation", b =>
+            modelBuilder.Entity("OnlineShop.Core.Models.AddressInformation", b =>
                 {
-                    b.HasOne("OnlineShop.Core.Models.CustomerManagement.Customer", "Customer")
+                    b.HasOne("OnlineShop.Core.Models.Customer", "Customer")
                         .WithMany("AddressInformations")
-                        .HasForeignKey("CustomerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("OnlineShop.Core.Models.CustomerManagement.CreditCard", b =>
-                {
-                    b.HasOne("OnlineShop.Core.Models.CustomerManagement.Customer", "Customer")
-                        .WithMany("CreditCards")
-                        .HasForeignKey("CustomerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("OnlineShop.Core.Models.CustomerManagement.Customer", b =>
-                {
-                    b.HasOne("OnlineShop.Core.Models.OrderManagement.ShoppingCart", "ShoppingCart")
-                        .WithOne("Customer")
-                        .HasForeignKey("OnlineShop.Core.Models.CustomerManagement.Customer", "CustomerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ShoppingCart");
-                });
-
-            modelBuilder.Entity("OnlineShop.Core.Models.OrderManagement.Order", b =>
-                {
-                    b.HasOne("OnlineShop.Core.Models.CustomerManagement.Customer", "Customer")
-                        .WithMany("Orders")
-                        .HasForeignKey("CustomerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OnlineShop.Core.Models.OrderManagement.ShoppingCart", "ShoppingCart")
-                        .WithOne("Order")
-                        .HasForeignKey("OnlineShop.Core.Models.OrderManagement.Order", "ShoppingCartID")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Customer");
-
-                    b.Navigation("ShoppingCart");
                 });
 
-            modelBuilder.Entity("OnlineShop.Core.Models.OrderManagement.OrderHistory", b =>
+            modelBuilder.Entity("OnlineShop.Core.Models.CreditCard", b =>
                 {
-                    b.HasOne("OnlineShop.Core.Models.CustomerManagement.Customer", "Customer")
-                        .WithOne("OrderHistory")
-                        .HasForeignKey("OnlineShop.Core.Models.OrderManagement.OrderHistory", "CustomerID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("OnlineShop.Core.Models.Customer", "Customer")
+                        .WithMany("CreditCards")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("OnlineShop.Core.Models.OrderManagement.PaymentInformation", b =>
+            modelBuilder.Entity("OnlineShop.Core.Models.Order", b =>
                 {
-                    b.HasOne("OnlineShop.Core.Models.OrderManagement.Order", "Order")
-                        .WithOne("PaymentInformation")
-                        .HasForeignKey("OnlineShop.Core.Models.OrderManagement.PaymentInformation", "OrderID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("OnlineShop.Core.Models.ShoppingCart", "ShoppingCart")
+                        .WithOne()
+                        .HasForeignKey("OnlineShop.Core.Models.Order", "CartId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("OnlineShop.Core.Models.Customer", "Customer")
+                        .WithOne()
+                        .HasForeignKey("OnlineShop.Core.Models.Order", "CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("OnlineShop.Core.Models.ShoppingCart", null)
+                        .WithMany("Orders")
+                        .HasForeignKey("ShoppingCartId");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("ShoppingCart");
+                });
+
+            modelBuilder.Entity("OnlineShop.Core.Models.PaymentInformation", b =>
+                {
+                    b.HasOne("OnlineShop.Core.Models.Order", null)
+                        .WithMany("PaymentInformations")
+                        .HasForeignKey("OrderId");
+
+                    b.HasOne("OnlineShop.Core.Models.Order", "Order")
+                        .WithOne()
+                        .HasForeignKey("OnlineShop.Core.Models.PaymentInformation", "PaymentInformationOrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("OnlineShop.Core.Models.OrderManagement.Return", b =>
+            modelBuilder.Entity("OnlineShop.Core.Models.Product", b =>
                 {
-                    b.HasOne("OnlineShop.Core.Models.OrderManagement.Order", "Order")
-                        .WithOne("Return")
-                        .HasForeignKey("OnlineShop.Core.Models.OrderManagement.Return", "OrderID");
-
-                    b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("OnlineShop.Core.Models.ProductManagement.Product", b =>
-                {
-                    b.HasOne("OnlineShop.Core.Models.OrderManagement.ShoppingCart", "ShoppingCart")
+                    b.HasOne("OnlineShop.Core.Models.ShoppingCart", "ShoppingCart")
                         .WithMany("Products")
-                        .HasForeignKey("ShoppingCartID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OnlineShop.Core.Models.StockManagement.Stock", "Stock")
-                        .WithOne("Product")
-                        .HasForeignKey("OnlineShop.Core.Models.ProductManagement.Product", "StockID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ShoppingCart");
-
-                    b.Navigation("Stock");
                 });
 
-            modelBuilder.Entity("ProductPromotion", b =>
+            modelBuilder.Entity("OnlineShop.Core.Models.ReturnedProduct", b =>
                 {
-                    b.HasOne("OnlineShop.Core.Models.ProductManagement.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("OnlineShop.Core.Models.Order", null)
+                        .WithMany("ReturnedProducts")
+                        .HasForeignKey("OrderId");
+
+                    b.HasOne("OnlineShop.Core.Models.Order", "Order")
+                        .WithOne()
+                        .HasForeignKey("OnlineShop.Core.Models.ReturnedProduct", "ReturnedOrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("OnlineShop.Core.Models.PromotionManagement.Promotion", null)
-                        .WithMany()
-                        .HasForeignKey("PromotionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("OnlineShop.Core.Models.CustomerManagement.Customer", b =>
+            modelBuilder.Entity("OnlineShop.Core.Models.ShoppingCart", b =>
+                {
+                    b.HasOne("OnlineShop.Core.Models.Customer", null)
+                        .WithMany("ShoppingCarts")
+                        .HasForeignKey("CustomerId");
+
+                    b.HasOne("OnlineShop.Core.Models.Customer", "Customer")
+                        .WithOne()
+                        .HasForeignKey("OnlineShop.Core.Models.ShoppingCart", "ShoppingCartCustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("OnlineShop.Core.Models.Stock", b =>
+                {
+                    b.HasOne("OnlineShop.Core.Models.Product", null)
+                        .WithMany("Stocks")
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("OnlineShop.Core.Models.Product", "Product")
+                        .WithOne()
+                        .HasForeignKey("OnlineShop.Core.Models.Stock", "StockProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("OnlineShop.Core.Models.Customer", b =>
                 {
                     b.Navigation("AddressInformations");
 
                     b.Navigation("CreditCards");
 
-                    b.Navigation("OrderHistory")
-                        .IsRequired();
+                    b.Navigation("ShoppingCarts");
+                });
 
+            modelBuilder.Entity("OnlineShop.Core.Models.Order", b =>
+                {
+                    b.Navigation("PaymentInformations");
+
+                    b.Navigation("ReturnedProducts");
+                });
+
+            modelBuilder.Entity("OnlineShop.Core.Models.Product", b =>
+                {
+                    b.Navigation("Stocks");
+                });
+
+            modelBuilder.Entity("OnlineShop.Core.Models.ShoppingCart", b =>
+                {
                     b.Navigation("Orders");
-                });
-
-            modelBuilder.Entity("OnlineShop.Core.Models.OrderManagement.Order", b =>
-                {
-                    b.Navigation("PaymentInformation")
-                        .IsRequired();
-
-                    b.Navigation("Return");
-                });
-
-            modelBuilder.Entity("OnlineShop.Core.Models.OrderManagement.ShoppingCart", b =>
-                {
-                    b.Navigation("Customer")
-                        .IsRequired();
-
-                    b.Navigation("Order")
-                        .IsRequired();
 
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("OnlineShop.Core.Models.StockManagement.Stock", b =>
-                {
-                    b.Navigation("Product")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

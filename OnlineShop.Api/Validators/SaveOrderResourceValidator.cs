@@ -7,9 +7,6 @@ namespace OnlineShop.Api.Validators
     {
         public SaveOrderResourceValidator() 
         {
-            RuleFor(p => p.OrderID)
-                .NotEmpty();
-
             RuleFor(p => p.TotalAmount)
                 .NotEmpty();
 

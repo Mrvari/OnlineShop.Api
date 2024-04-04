@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using OnlineShop.Core.Models.CustomerManagement;
+using OnlineShop.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +15,11 @@ namespace OnlineShop.Data.Configurations
         public void Configure(EntityTypeBuilder<CreditCard> builder)
         {
             builder
-                .HasKey(cd => cd.CardID); // primary key 
+                .HasKey(cd => cd.Id); // primary key 
 
             builder
-                .Property(cd => cd.CustomerID)
-                .IsRequired();
+                .Property(cd => cd.Id)
+                .UseIdentityColumn();
 
             builder
                 .Property(cd => cd.CardHolderName)
@@ -36,6 +36,15 @@ namespace OnlineShop.Data.Configurations
             builder
                 .Property(cd => cd.cvv)
                 .IsRequired();
+
+            builder
+                .HasOne(cd => cd.Customer)
+                .WithMany(c => c.CreditCards)
+                .HasForeignKey(cd => cd.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .ToTable("CreditCards");
         }
     }
 }

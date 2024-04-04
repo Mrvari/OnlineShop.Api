@@ -1,11 +1,6 @@
 ﻿using OnlineShop.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
-using OnlineShop.Core.Models.CustomerManagement;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OnlineShop.Core.Models;
 
 namespace OnlineShop.Data.Repositories
 {
@@ -14,25 +9,25 @@ namespace OnlineShop.Data.Repositories
         public CreditCardRepository(OnlineShopDbContext context)
             : base(context) { }
 
-        public async Task<IEnumerable<CreditCard>> GetAllWithCreditCardAsync()
+        public async Task<IEnumerable<CreditCard>> GetAllWithCustomerAsync()
         {
             return await OnlineShopDbContext.CreditCards
-                .Include(c => c.Customer)
+                .Include(cd => cd.Customer)
                 .ToListAsync();
         }
 
-        public async Task<CreditCard?> GetWithCreditCardByIdAsync(int cardID)
+        public async Task<CreditCard?> GetWithCreditCardByIdAsync(int id)
         {
             return await OnlineShopDbContext.CreditCards
-                .Include(c => c.Customer)
-                .SingleOrDefaultAsync(c => c.CardID == cardID);
+                .Include(cd => cd.Customer)
+                .SingleOrDefaultAsync(cd => cd.Id == id);
         }
 
-        public async Task<IEnumerable<CreditCard>> GetAllWithCreditCardByCustomerIdAsync(int customerID)
+        public async Task<IEnumerable<CreditCard>> GetAllWithCustomerByCustomerIdAsync(int customerId)
         {
             return await OnlineShopDbContext.CreditCards
-                .Include(c => c.Customer)
-                .Where(c => c.CustomerID == customerID)
+                .Include(cd => cd.Customer)
+                .Where(cd => cd.CustomerId == customerId)
                 .ToListAsync();
         }
 

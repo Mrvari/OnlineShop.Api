@@ -1,5 +1,4 @@
-﻿using OnlineShop.Core.Models.OrderManagement;
-using OnlineShop.Core.Models.ProductManagement;
+﻿using OnlineShop.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +9,7 @@ namespace OnlineShop.Core.Repositories
 {
     public interface IProductRepository : IRepository<Product>
     {
-        Task<IEnumerable<Product>> GetAllWithProductAsync();
-        Task<Product> GetWithProductByIdAsync(int ProductID);
-        Task<IEnumerable<Product>> GetAllWithProductByPriceAsync(int Price);
+        Task<IEnumerable<Product>> GetAllWithStocksAsync();
+        Task<Product> GetWithStockByIdAsync(int id);
     }
 }

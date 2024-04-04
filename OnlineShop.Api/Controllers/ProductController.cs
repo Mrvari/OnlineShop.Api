@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Api.DTO;
 using OnlineShop.Api.Validators;
-using OnlineShop.Core.Models.ProductManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Services;
 
 namespace OnlineShop.Api.Controllers
@@ -53,7 +53,7 @@ namespace OnlineShop.Api.Controllers
 
             var newProduct = await _productService.CreateProduct(productToCreate); //yeni oluşan ürünü db ye kaydetmek için bir istek yapar
 
-            var product = await _productService.GetProductById(newProduct.ProductID); //yeni oluşan ürünün db den id si ile almak için istek yapar
+            var product = await _productService.GetProductById(newProduct.Id); //yeni oluşan ürünün db den id si ile almak için istek yapar
 
             var productResource = _mapper.Map<Product, ProductDTO>(product);//db den alınan product nesnelerini, istemciye gönderilecek ProductDTO nesnesine dönüştürür
 

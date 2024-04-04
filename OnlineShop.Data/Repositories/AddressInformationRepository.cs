@@ -1,12 +1,6 @@
 ﻿using OnlineShop.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
 using OnlineShop.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OnlineShop.Core.Models.CustomerManagement;
 
 namespace OnlineShop.Data.Repositories
 {
@@ -16,20 +10,26 @@ namespace OnlineShop.Data.Repositories
             : base(context)
         { }
 
-        public async Task<IEnumerable<AddressInformation>> GetAllWithAddressAsync()
+        public async Task<IEnumerable<AddressInformation>> GetAllWithCustomerAsync()
         {
-            // Tüm adresleri ve ilişkili müşteri bilgilerini içeren bir liste döndürür
             return await OnlineShopDbContext.AddressInformations
                 .Include(a => a.Customer)
                 .ToListAsync();
         }
 
-        public Task<AddressInformation?> GetWithAddressIDAsync(int id)
+        public async Task<AddressInformation?> GetWithCustomerByIdAsync(int id)
         {
-            // Belirli bir müşteri kimliği (ID) ile ilişkili adresi ve ilişkili müşteri bilgisini döndürür
-            return OnlineShopDbContext.AddressInformations
+            return await OnlineShopDbContext.AddressInformations
                 .Include(a => a.Customer)
-                .SingleOrDefaultAsync(a => a.CustomerID == id);
+                .SingleOrDefaultAsync(a => a.Id == id);
+        }
+
+        public async Task<IEnumerable<AddressInformation>> GetAllWithCustomerByAddressInformationIdAsync(int customerId)
+        {
+            return await OnlineShopDbContext.AddressInformations
+                .Include(a => a.Customer)
+                .Where(a => a.CustomerId == customerId)
+                .ToListAsync();
         }
 
         private OnlineShopDbContext OnlineShopDbContext

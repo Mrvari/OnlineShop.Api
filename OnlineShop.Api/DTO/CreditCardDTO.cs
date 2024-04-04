@@ -2,7 +2,7 @@
 {
     public class CreditCardDTO
     {
-        public int CardID { get; set; }
+        //public int CardID { get; set; }
         public string CardHolderName { get; set; }
         public DateTime ExpiryDate { get; set; }
 

@@ -1,5 +1,5 @@
 ﻿using OnlineShop.Core;
-using OnlineShop.Core.Models.CustomerManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Repositories;
 using OnlineShop.Core.Services;
 using System;
@@ -42,7 +42,7 @@ namespace OnlineShop.Services.Services
 
         public async Task UpdateCreditCard(CreditCard creditCardToBeUpdated, CreditCard creditCard)
         {
-            creditCardToBeUpdated.CardID = creditCard.CardID;
+            creditCardToBeUpdated.Id = creditCard.Id;
             await _unitOfWork.CommitAsync();
         }
     }

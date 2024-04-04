@@ -1,4 +1,4 @@
-﻿using OnlineShop.Core.Models.OrderManagement;
+﻿using OnlineShop.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +9,7 @@ namespace OnlineShop.Core.Repositories
 {
     public interface IPaymentInformationRepository : IRepository<PaymentInformation>
     {
-        Task<IEnumerable<PaymentInformation>> GetAllWithPaymentInformationAsync();
-        Task<PaymentInformation> GetWithPaymentInformationByIdAsync(int PaymentID);
-        Task<IEnumerable<PaymentInformation>> GetAllWithPaymentInformationByCardIDAsync(int CardID);
+        Task<IEnumerable<PaymentInformation>> GetAllWithOrderAsync();
+        Task<PaymentInformation> GetWithOrderByIdAsync(int id);
     }
 }

@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnlineShop.Core.Models.OrderManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlineShop.Data.Repositories
 {
@@ -15,27 +10,27 @@ namespace OnlineShop.Data.Repositories
             : base(context)
         { }
 
-        public async Task<IEnumerable<ShoppingCart>> GetAllWithShoppingCartAsync()
+        public async Task<IEnumerable<ShoppingCart>> GetAllWithCustomerAsync()
         {
             return await OnlineShopDbContext.ShoppingCarts
-                .Include(c => c.Customer)
+                .Include(sc => sc.Customer)
                 .ToListAsync();
 
         }
 
-        public async Task<ShoppingCart> GetWithShoppingCartByIdAsync(int CartID)
+        public async Task<ShoppingCart> GetWithCustomerByIdAsync(int id)
         {
             return await OnlineShopDbContext.ShoppingCarts
-                .Include(c => c.Customer)
-                .SingleOrDefaultAsync(c => c.CartID == CartID);
+                .Include(sc => sc.Customer)
+                .SingleOrDefaultAsync(sc => sc.Id == id);
         }
 
-        public async Task<IEnumerable<ShoppingCart>> GetAllWithShoppingCartByCustomerIDAsync(int CustomerID)
+        public async Task<IEnumerable<ShoppingCart>> GetAllWithCustomerByCustomerIdAsync(int shoppingCartCustomerId)
         {
             return await OnlineShopDbContext.ShoppingCarts
-                .Include(c => c.Customer)
-                .Where(c => c.CustomerID == CustomerID)
-                 .ToListAsync();
+                .Include(sc => sc.Customer)
+                .Where(sc => sc.ShoppingCartCustomerId == shoppingCartCustomerId)
+                .ToListAsync();
         }
 
         private OnlineShopDbContext OnlineShopDbContext

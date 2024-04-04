@@ -1,5 +1,5 @@
 ﻿using OnlineShop.Core;
-using OnlineShop.Core.Models.OrderManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -32,17 +32,17 @@ namespace OnlineShop.Services.Services
 
         public async Task<IEnumerable<PaymentInformation>> GetAllPaymentInformation()
         {
-            return await _unitOfWork.PaymentInformations.GetAllWithPaymentInformationAsync();
+            return await _unitOfWork.PaymentInformations.GetAllWithOrderAsync();
         }
 
         public async Task<PaymentInformation> GetPaymentInformationById(int id)
         {
-            return await _unitOfWork.PaymentInformations.GetWithPaymentInformationByIdAsync(id);
+            return await _unitOfWork.PaymentInformations.GetWithOrderByIdAsync(id);
         }
 
         public async Task UpdatePaymentInformation(PaymentInformation PaymentToBeUpdated, PaymentInformation paymentInformation)
         {
-            PaymentToBeUpdated.PaymentID = paymentInformation.PaymentID;
+            PaymentToBeUpdated.Id = paymentInformation.Id;
             await _unitOfWork.CommitAsync();
         }
     }

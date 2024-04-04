@@ -7,9 +7,6 @@ namespace OnlineShop.Api.Validators
     {
         public SaveAddressInformationResourceValidator() 
         {
-            RuleFor(p => p.AddressID)
-                .NotEmpty();
-
             RuleFor(p => p.County)
                 .NotEmpty()
                 .MaximumLength(50);

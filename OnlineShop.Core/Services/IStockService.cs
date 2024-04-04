@@ -1,5 +1,5 @@
-﻿using OnlineShop.Core.Models.OrderManagement;
-using OnlineShop.Core.Models.StockManagement;
+﻿using OnlineShop.Core.Models;
+using OnlineShop.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

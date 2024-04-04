@@ -7,8 +7,6 @@ namespace OnlineShop.Api.Validators
     {
         public SaveShoppingCartResourceValidator()
         {
-            RuleFor(p => p.CartID)
-              .NotEmpty();
         }
     }
 }

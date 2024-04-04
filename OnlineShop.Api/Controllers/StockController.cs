@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Api.DTO;
 using OnlineShop.Api.Validators;
-using OnlineShop.Core.Models.StockManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Services;
 using OnlineShop.Services.Services;
 
@@ -52,7 +52,7 @@ namespace OnlineShop.Api.Controllers
 
             var newStock = await _stockService.CreateStock(stockToCreate);
 
-            var stock = await _stockService.GetStockById(newStock.StockID);
+            var stock = await _stockService.GetStockById(newStock.Id);
 
             var stockResource = _mapper.Map<Stock, StockDTO>(stock);
 

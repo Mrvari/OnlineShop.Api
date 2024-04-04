@@ -1,5 +1,5 @@
 ﻿using OnlineShop.Core;
-using OnlineShop.Core.Models.OrderManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Services;
 
 namespace OnlineShop.Services.Services
@@ -32,12 +32,12 @@ namespace OnlineShop.Services.Services
 
         public async Task<Order> GetOrderById(int id)
         {
-            return await _unitOfWork.Orders.GetWithOrderByIdAsync(id);
+            return await _unitOfWork.Orders.GetWithPaymentInformationsByIdAsync(id);
         }
 
         public async Task UpdateOrder(Order OrderToBeUpdated, Order order)
         {
-            OrderToBeUpdated.OrderID = order.OrderID;
+            OrderToBeUpdated.Id = order.Id;
             await _unitOfWork.CommitAsync();
         }
     }

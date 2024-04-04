@@ -1,4 +1,4 @@
-﻿using OnlineShop.Core.Models.CustomerManagement;
+﻿using OnlineShop.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,9 @@ namespace OnlineShop.Core.Repositories
 {
     public interface IAddressInformationRepository : IRepository<AddressInformation>
     {
-        Task<IEnumerable<AddressInformation>> GetAllWithAddressAsync();
-        Task<AddressInformation> GetWithAddressIDAsync(int AddressID);
+        Task<IEnumerable<AddressInformation>> GetAllWithCustomerAsync();
+        Task<AddressInformation> GetWithCustomerByIdAsync(int id);
+        Task<IEnumerable<AddressInformation>> GetAllWithCustomerByAddressInformationIdAsync(int customerId);
+
     }
 }

@@ -4,18 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OnlineShop.Core.Models.OrderManagement
+namespace OnlineShop.Core.Models
 {
     public class PaymentInformation
     {
-        public int PaymentID { get; set; }
-        public int OrderID { get; set; }
-        public DateTime PaymentDate { get; set; }
+        public int Id { get; set; }
+        public string PaymentDate { get; set; }
         public string PaymentType { get; set; }
         public string PaymentStatus { get; set; }
-        public int PaymentAmount { get; set; }
-        public int CardID { get; set; }
-
+        public int PaymentInformationOrderId { get; set; }
         public Order Order { get; set; }
     }
 }

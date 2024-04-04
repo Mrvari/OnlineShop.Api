@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
 using OnlineShop.Api.DTO;
-using OnlineShop.Core.Models.CustomerManagement;
-using OnlineShop.Core.Models.OrderManagement;
-using OnlineShop.Core.Models.ProductManagement;
-using OnlineShop.Core.Models.PromotionManagement;
-using OnlineShop.Core.Models.StockManagement;
+using OnlineShop.Core.Models;
 
 namespace OnlineShop.Api.Mapping
 {
@@ -17,11 +13,9 @@ namespace OnlineShop.Api.Mapping
             CreateMap<CreditCard, CreditCardDTO>();
             CreateMap<Customer, CustomerDTO>();
             CreateMap<Order, OrderDTO>();
-            CreateMap<OrderHistory, OrderHistoryDTO>();
             CreateMap<PaymentInformation, PaymentInformationDTO>();
             CreateMap<Product, ProductDTO>();
-            CreateMap<Promotion, PromotionDTO>();
-            CreateMap<Return, ReturnDTO>();
+            CreateMap<ReturnedProduct, ReturnedProductDTO>();
             CreateMap<ShoppingCart, ShoppingCartDTO>();
             CreateMap<Stock, StockDTO>();
 
@@ -30,11 +24,9 @@ namespace OnlineShop.Api.Mapping
             CreateMap<CreditCardDTO, CreditCard>();
             CreateMap<CustomerDTO, Customer>();
             CreateMap<OrderDTO, Order>();
-            CreateMap<OrderHistoryDTO, OrderHistory>();
             CreateMap<PaymentInformationDTO, PaymentInformation>();
             CreateMap<ProductDTO, Product>();
-            CreateMap<PromotionDTO, Promotion>();
-            CreateMap<ReturnDTO, Return>();
+            CreateMap<ReturnedProductDTO, ReturnedProduct>();
             CreateMap<ShoppingCartDTO, ShoppingCart>();
             CreateMap<StockDTO, Stock>();
 
@@ -45,10 +37,8 @@ namespace OnlineShop.Api.Mapping
             CreateMap<SaveCreditCardDTO, CreditCard>();
             CreateMap<SaveCustomerDTO, Customer>();
             CreateMap<SaveOrderDTO, Order>();
-            CreateMap<SaveOrderHistoryDTO, OrderHistory>();
             CreateMap<SavePaymentInformationDTO, PaymentInformation>();
-            CreateMap<SavePromotionDTO, Promotion>();
-            CreateMap<SaveReturnDTO, Return>();
+            CreateMap<SaveReturnedProductDTO, ReturnedProduct>();
             CreateMap<SaveShoppingCartDTO, ShoppingCart>();
             CreateMap<SaveStockDTO, Stock>();
         }

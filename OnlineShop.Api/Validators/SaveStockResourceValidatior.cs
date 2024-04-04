@@ -7,8 +7,6 @@ namespace OnlineShop.Api.Validators
     {
         public SaveStockResourceValidatior() 
         {
-            RuleFor(p => p.StockID)
-                .NotEmpty();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using OnlineShop.Core.Models.OrderManagement;
+﻿using OnlineShop.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +9,8 @@ namespace OnlineShop.Core.Repositories
 {
     public interface IShoppingCartRepository : IRepository<ShoppingCart>
     {
-        Task<IEnumerable<ShoppingCart>> GetAllWithShoppingCartAsync();
-        Task<ShoppingCart> GetWithShoppingCartByIdAsync(int CartID);
-        Task<IEnumerable<ShoppingCart>> GetAllWithShoppingCartByCustomerIDAsync(int CustomerID);
+        Task<IEnumerable<ShoppingCart>> GetAllWithCustomerAsync();
+        Task<ShoppingCart> GetWithCustomerByIdAsync(int id);
+        Task<IEnumerable<ShoppingCart>> GetAllWithCustomerByCustomerIdAsync(int customerId);
     }
 }

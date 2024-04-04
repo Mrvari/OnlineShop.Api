@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnlineShop.Core.Models.OrderManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OnlineShop.Data.Repositories
 {
@@ -15,26 +10,18 @@ namespace OnlineShop.Data.Repositories
             : base(context)
         { }
 
-        public async Task<IEnumerable<PaymentInformation>> GetAllWithPaymentInformationAsync()
+        public async Task<IEnumerable<PaymentInformation>> GetAllWithOrderAsync()
         {
             return await OnlineShopDbContext.PaymentInformations
                 .Include(o => o.Order)
                 .ToListAsync();
         }
 
-        public async Task<PaymentInformation> GetWithPaymentInformationByIdAsync(int PaymentID)
+        public async Task<PaymentInformation> GetWithOrderByIdAsync(int id)
         {
             return await OnlineShopDbContext.PaymentInformations
                 .Include(o => o.Order)
-                .SingleOrDefaultAsync(p => p.PaymentID == PaymentID);
-        }
-
-        public async Task<IEnumerable<PaymentInformation>> GetAllWithPaymentInformationByCardIDAsync(int CardID)
-        {
-            return await OnlineShopDbContext.PaymentInformations
-                .Include(o => o.Order)
-                .Where(c => c.CardID == CardID)
-                .ToListAsync();
+                .SingleOrDefaultAsync(p => p.Id == id);
         }
 
         private OnlineShopDbContext OnlineShopDbContext 

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OnlineShop.Core.Models.StockManagement;
 using OnlineShop.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Reflection.Emit;
-using OnlineShop.Core.Models.ProductManagement;
 
 namespace OnlineShop.Data.Configurations
 {
@@ -17,11 +15,7 @@ namespace OnlineShop.Data.Configurations
         public void Configure(EntityTypeBuilder<Stock> builder)
         {
             builder
-                .HasKey(s => s.StockID); //PK
-
-            builder
-                .Property(s => s.ProductID)
-                .IsRequired();
+                .HasKey(s => s.Id); //PK
 
             builder
                 .Property(s => s.Quantity)
@@ -37,9 +31,12 @@ namespace OnlineShop.Data.Configurations
 
             builder
                 .HasOne(s => s.Product)
-                .WithOne(p => p.Stock)
-                .HasForeignKey<Product>(p => p.StockID)
-                .IsRequired();
+                .WithOne()
+                .HasForeignKey<Stock>(s => s.StockProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .ToTable("Stocks");
         }
     }
 }

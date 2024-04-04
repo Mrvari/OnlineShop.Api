@@ -3,7 +3,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using OnlineShop.Api.DTO;
 using OnlineShop.Api.Validators;
-using OnlineShop.Core.Models.OrderManagement;
+using OnlineShop.Core.Models;
 using OnlineShop.Core.Services;
 
 namespace OnlineShop.Api.Controllers
@@ -53,7 +53,7 @@ namespace OnlineShop.Api.Controllers
 
             var newPaymentInformation = await _paymentInformationService.CreatePaymentInformation(paymentInformationToCreate);
 
-            var paymentInformation = await _paymentInformationService.GetPaymentInformationById(newPaymentInformation.PaymentID);
+            var paymentInformation = await _paymentInformationService.GetPaymentInformationById(newPaymentInformation.Id);
 
             var paymentResource = _mapper.Map<PaymentInformation, PaymentInformationDTO>(paymentInformation);
 
