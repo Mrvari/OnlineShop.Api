@@ -4,6 +4,7 @@ using OnlineShop.Core.Services;
 using OnlineShop.Api.DTO;
 using OnlineShop.Api.Validators;
 using OnlineShop.Core.Models;
+using Microsoft.Extensions.Logging;
 
 namespace OnlineShop.Api.Controllers
 {
@@ -13,19 +14,30 @@ namespace OnlineShop.Api.Controllers
     {
         private readonly IAddressInformationService _addressInformationService;
         private readonly IMapper _mapper;
-        public AddressInformationController(IAddressInformationService addressInformationService, IMapper mapper)
+        private readonly ILogger<AddressInformationController> _looger;
+        public AddressInformationController(IAddressInformationService addressInformationService, IMapper mapper, ILogger<AddressInformationController> looger)
         {
             this._addressInformationService = addressInformationService;
             this._mapper = mapper;
+            this._looger = looger;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AddressInformationDTO>>> GetAllAddressInformation()
         {
-            var addressInformations = await _addressInformationService.GetAllAddressInformation();
+            try
+            {
+                var addressInformations = await _addressInformationService.GetAllAddressInformation();
 
-            var addressInformationResources = _mapper.Map<IEnumerable<AddressInformation>,IEnumerable<AddressInformationDTO>>(addressInformations);
-            return Ok(addressInformationResources);
+                var addressInformationResources = _mapper.Map<IEnumerable<AddressInformation>, IEnumerable<AddressInformationDTO>>(addressInformations);
+                return Ok(addressInformationResources);
+            }
+            catch (Exception ex)
+            {
+                _looger.LogError(ex, "An error occurred while retrieving all address information.");
+                return StatusCode(500, "An error occurred while processing your request.");
+
+            }
         }
 
         [HttpGet("{id}")]
