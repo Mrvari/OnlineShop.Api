@@ -10,6 +10,18 @@ using Microsoft.AspNetCore.Hosting;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowOrigin",
+        builder => builder
+            .WithOrigins("http://localhost:5173") // Ýstemci adresi buraya eklenebilir
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
+
+
 var configuration = builder.Configuration;
 
 // Add DbContext
@@ -63,7 +75,10 @@ app.UseStaticFiles();
 // Add support to logging requests with Serilog
 app.UseSerilogRequestLogging();
 
+app.UseCors("AllowOrigin");
+
 app.UseRouting();
+
 app.UseAuthorization();
 app.UseHttpsRedirection();
 app.MapControllers();

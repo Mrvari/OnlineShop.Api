@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using OnlineShop.Api.DTO;
 using OnlineShop.Api.Validators;
 using OnlineShop.Core.Models;
 using OnlineShop.Core.Services;
-using Microsoft.Extensions.Logging; 
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace OnlineShop.Api.Controllers
@@ -80,6 +81,11 @@ namespace OnlineShop.Api.Controllers
                 var newCustomer = await _customerService.CreateCustomer(customerToCreate);
 
                 var customerResource = _mapper.Map<Customer, CustomerDTO>(newCustomer);
+
+                HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+                HttpContext.Response.Headers.Add("Access-Control-Allow-Credentials", "true");
+                HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+                HttpContext.Response.Headers.Add("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
 
                 return Ok(customerResource);
             }

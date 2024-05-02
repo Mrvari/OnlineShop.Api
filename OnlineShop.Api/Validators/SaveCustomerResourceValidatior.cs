@@ -20,7 +20,8 @@ namespace OnlineShop.Api.Validators
                 .MaximumLength(50);
 
             RuleFor(p => p.Password)
-                .NotEmpty();
+                .NotEmpty()
+                .MaximumLength(50);
         }
     }
 }

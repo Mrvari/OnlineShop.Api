@@ -7,6 +7,6 @@
         public string LastName { get; set; } = "";
         public string email { get; set; } = "";
 
-        public int Password { get; set; }
+        public string Password { get; set; }
     }
 }
