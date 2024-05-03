@@ -11,6 +11,8 @@ namespace OnlineShop.Core.Services
     {
         Task<IEnumerable<Customer>> GetAllCustomer();
         Task<Customer> GetCustomerById(int id);
+        Task<Customer> GetCustomerByEmailAndPassword(string email, string password);
+        Task<Customer> GetCustomerByEmail(string email);
         Task<Customer> CreateCustomer(Customer newCustomer);
         Task UpdateCustomer(Customer customerToBeUpdated, Customer customer);
         Task DeleteCustomer(Customer customer);

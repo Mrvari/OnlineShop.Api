@@ -15,7 +15,7 @@ namespace OnlineShop.Api.Validators
                 .NotEmpty()
                 .MaximumLength(50);
 
-            RuleFor(p => p.email)
+            RuleFor(p => p.Email)
                 .NotEmpty()
                 .MaximumLength(50);
 

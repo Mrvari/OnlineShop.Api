@@ -96,6 +96,35 @@ namespace OnlineShop.Api.Controllers
             }
         }
 
+        [HttpPost("login")]
+        public async Task<ActionResult<CustomerDTO>> Login([FromBody] LoginDTO loginDto)
+        {
+            try
+            {
+                // E-posta adresi ile kullanıcıyı bul
+                var customer = await _customerService.GetCustomerByEmail(loginDto.Email);
+                if (customer == null)
+                {
+                    return NotFound("User not found"); // Yetkilendirme başarısız olduğunda Unauthorized döndür
+                }
+                if (customer.Password != loginDto.Password)
+                {
+                    // Eşleşmiyorsa yetkilendirme başarısız olduğunda Unauthorized döndür
+                    return Unauthorized("Invalid password");
+                }
+
+                // Başarılı giriş durumunda kullanıcı bilgilerini döndür
+                var customerResource = _mapper.Map<Customer, CustomerDTO>(customer);
+
+                return Ok(customerResource);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while logging in.");
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
+
         [HttpPut("{id}")]
         public async Task<ActionResult<CustomerDTO>> UpdateCustomer(int id, [FromBody] SaveCustomerDTO saveCustomerResource)
         {

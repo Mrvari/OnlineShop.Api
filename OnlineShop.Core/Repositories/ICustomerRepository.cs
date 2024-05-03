@@ -11,6 +11,7 @@ namespace OnlineShop.Core.Repositories
     {
         Task<IEnumerable<Customer>> GetAllWithCreditCardAsync();
         Task<Customer> GetWithCreditCardsByIdAsync(int id);
+        Task<Customer> GetByEmail(string email);
 
     }
 }

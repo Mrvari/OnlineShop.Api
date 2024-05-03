@@ -43,6 +43,23 @@ namespace OnlineShop.Services.Services
                 .GetWithCreditCardsByIdAsync(id);
         }
 
+        public async Task<Customer> GetCustomerByEmailAndPassword(string email, string password)
+        {
+            var customer = await _unitOfWork.Customers.GetByEmail(email);
+
+            if (customer != null && customer.Password == password)
+            {
+                return customer;
+            }
+
+            return null;
+        }
+
+        public async Task<Customer> GetCustomerByEmail(string email)
+        {
+            return await _unitOfWork.Customers.GetByEmail(email);
+        }
+
         public async Task UpdateCustomer(Customer CustomerToBeUpdated, Customer customer)
         {
             CustomerToBeUpdated.Id = customer.Id;
