@@ -1,4 +1,4 @@
-# Unit 01: Online Shop Application - ASP.NET Core
+# Online Shop Application - ASP.NET Core
 
 ## Overview
 This project is an online shopping application developed using .NET Core. This app is designed to provide a modern shopping experience. Users can view, search and add to cart various products. Additionally, users can register, log in and access their accounts.
